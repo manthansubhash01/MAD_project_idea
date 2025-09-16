@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config()
 const connectDB = require('./config/dbConnection')
 const authRoutes = require('./routes/authRoutes')
 const profileRoutes = require('./routes/profileRoute')
+const folderRoutes = require('./routes/folderRoutes')
 
 const PORT = process.env.PORT || 3001
 
@@ -15,6 +16,7 @@ app.use(cors())
 app.use(express.json())
 app.use('/auth', authRoutes)
 app.use('/user', profileRoutes)
+app.use('/user', folderRoutes)
 
 app.get('/',(req,res) => {
     res.send('Server is running.')
