@@ -33,7 +33,7 @@ const getAllFolder = async (req, res) => {
 
 const getFolderById = async (req, res) => {
     try{
-        const folderId = req.params.folderId?.trim();
+        const folderId = req.params.id?.trim();
         const userId = req.user.id
 
         if (!mongoose.Types.ObjectId.isValid(folderId)) {
@@ -55,10 +55,11 @@ const getFolderById = async (req, res) => {
 
 const updateFolder = async (req, res) => {
     try{
-        const folderId = req.params.folderId?.trim();
+        const folderId = req.params.id?.trim();
         const userId = req.user.id
         
         if (!mongoose.Types.ObjectId.isValid(folderId)) {
+            console.log(folderId)
             return res.status(400).json({ Error: "Invalid folderId" });
         }
 
@@ -84,14 +85,14 @@ const updateFolder = async (req, res) => {
 
 const deleteFolder = async (req, res) => {
     try{
-        const folderId = req.params.folderId?.trim();
+        const folderId = req.params.id?.trim();
         const userId = req.user.id
 
         if (!mongoose.Types.ObjectId.isValid(folderId)) {
             return res.status(400).json({ Error: "Invalid folderId" });
         }
 
-        const folder = await Folder.findOneAndDelete({_id : folderId, userId : new mongoose.Types.ObjectId(userId)})
+        const folder = await Folder.findOneAndDelete({_id : new mongoose.Types.ObjectId(folderId), userId : new mongoose.Types.ObjectId(userId)})
 
         if(!folder){
             return res.status(400).json({Error : 'Folder is not found or not authorized'})
