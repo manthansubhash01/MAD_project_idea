@@ -6,22 +6,22 @@ const registerUser = async (req,res) => {
     const {name, email, password} = req.body
 
     if(!name){
-        res.status(400).send('Please enter your name.')
+        return res.status(400).json({ error: "Please enter your name." })
     }
 
     if(!email){
-        res.status(400).send('Please enter your Email Address.')
+        return res.status(400).json({ error: "Please enter your Email Address." })
     }
 
     if(!password){
-        res.status(400).send('Please enter the Password.')
+        return res.status(400).json({ error: "Please enter the Password." })
     }
 
     try{
         const existingUser = await User.findOne({email})
         
         if(existingUser){
-            res.status(400).send('User already exists.')
+            return res.status(400).json({ error: "User already exists." })
         }
 
         const salt = await bcrypt.genSalt(10)
@@ -29,9 +29,9 @@ const registerUser = async (req,res) => {
 
         const newUser = await User.create({ name, email, passwordHashed })
 
-        res.status(201).json({ message : 'User registered successfully.', user : newUser })
+        return res.status(201).json({ message : 'User registered successfully.', user : newUser })
     }catch(err){
-        res.status(500).send('Server error :',err)
+        return res.status(500).json({ error: "Server error", details: err.message })
     }
 
 }
@@ -41,24 +41,24 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body
 
     if(!email){
-        res.status(400).send('Please enter your Email Address.')
+        return res.status(400).json({ error: "Please enter your Email Address." })
     }
 
     if(!password){
-        res.status(400).send('Please enter the Password.')
+        return res.status(400).json({ error: "Please enter the Password." })
     }
 
     try{
         const user = await User.findOne({email})
 
         if(!user){
-            res.status(400).send("User doesn't exist")
+            return res.status(400).json({ error: "User doesn't exist" })
         }
 
         const isValid = await bcrypt.compare(password, user.passwordHashed)
 
         if(!isValid){
-            res.status(400).send('Invalid Credentials')
+            return res.status(400).json({ error: "Invalid credentials" })
         }
 
         const token = jwt.sign(
@@ -67,10 +67,11 @@ const loginUser = async (req, res) => {
             { expiresIn : '30d' }
         )
 
-        res.json({ message : 'Login successful', token})
+        console.log(token)
+        return res.json({ message : 'Login successful', token})
 
     }catch(err){
-        res.status(500).send(err)
+        return res.status(500).json({ error: "Server error", details: err.message })
     }
 }
 
