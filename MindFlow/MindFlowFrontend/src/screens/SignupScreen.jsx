@@ -57,7 +57,7 @@ const SignupScreen = ({ navigation }) => {
         Already have an account?{" "}
         <Text
           style={styles.link}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => navigation.replace("Login")}
         >
           Log in
         </Text>

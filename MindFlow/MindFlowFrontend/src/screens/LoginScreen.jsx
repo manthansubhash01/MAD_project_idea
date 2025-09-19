@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,9 +9,37 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN = 'authToken'
+const USER  = 'User'
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const loadData = async() => {
+      try{
+        const data = await AsyncStorage.getItem(USER)
+        const user = JSON.parse(data)
+        if(user){
+          setEmail(user.email)
+          setPassword(user.password)
+          const res = await fetch('http://localhost:3000/auth/login',{
+            method : 'POST',
+            headers : { "Content-Type": "application/json" },
+            body : JSON.stringify({email, password})
+          })
+          const result = await res.json()
+          console.log(result)
+          await AsyncStorage.setItem(TOKEN, JSON.stringify(result.token))
+          
+          navigation.replace("Home");
+        }
+      }catch(err){
+
+      }
+    }
+    loadData()
+
+  },[])
 
   const handleLogin = async () => {
     try{
@@ -22,7 +50,8 @@ const LoginScreen = ({navigation}) => {
         })
         const data = await res.json()
         console.log(data)
-        await AsyncStorage.setItem(TOKEN, data.token)
+        await AsyncStorage.setItem(TOKEN, JSON.stringify(data.token))
+        await AsyncStorage.setItem(USER, JSON.stringify({email , password}))
         
         navigation.replace("Home");
     }catch(err){
@@ -60,7 +89,7 @@ const LoginScreen = ({navigation}) => {
 
       <Text style={styles.footer}>
         Don’t have an account?{" "}
-        <Text style={styles.link} onPress={() => navigation.navigate("Signup")}>
+        <Text style={styles.link} onPress={() => navigation.replace("Signup")}>
           Sign up
         </Text>
       </Text>
