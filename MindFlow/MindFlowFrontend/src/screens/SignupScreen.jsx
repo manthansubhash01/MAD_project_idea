@@ -6,7 +6,9 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const User_Name = 'Name'
 const SignupScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -21,6 +23,7 @@ const SignupScreen = ({ navigation }) => {
       });
 
       const data = await res.json();
+      await AsyncStorage.setItem(User_Name, name)
       console.log(data)
     } catch (err) {
       console.log(err)

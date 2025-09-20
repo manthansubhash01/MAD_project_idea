@@ -10,6 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN = 'authToken'
 const USER  = 'User'
+const LAST_LOGIN = 'lastLogin'
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,9 +30,10 @@ const LoginScreen = ({navigation}) => {
           })
           const result = await res.json()
           console.log(result)
-          await AsyncStorage.setItem(TOKEN, JSON.stringify(result.token))
+          await AsyncStorage.setItem(TOKEN, result.token)
+          await AsyncStorage.setItem(LAST_LOGIN, new Date().toDateString())
           
-          navigation.replace("Home");
+          navigation.replace("Dashboard");
         }
       }catch(err){
 
@@ -50,10 +52,11 @@ const LoginScreen = ({navigation}) => {
         })
         const data = await res.json()
         console.log(data)
-        await AsyncStorage.setItem(TOKEN, JSON.stringify(data.token))
+        await AsyncStorage.setItem(TOKEN, data.token)
         await AsyncStorage.setItem(USER, JSON.stringify({email , password}))
+        await AsyncStorage.setItem(LAST_LOGIN, new Date().toDateString())
         
-        navigation.replace("Home");
+        navigation.replace("Dashboard");
     }catch(err){
         console.log(err)
     }
