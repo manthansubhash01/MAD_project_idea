@@ -18,7 +18,7 @@ app.use(express.json())
 app.use('/auth', authRoutes)
 app.use('/user', profileRoutes)
 app.use('/user', folderRoutes)
-app.use('/user/folders/:id', noteRoutes)
+app.use('/user/folders/:folderId', noteRoutes)
 
 app.get('/',(req,res) => {
     res.send('Server is running.')

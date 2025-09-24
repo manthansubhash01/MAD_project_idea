@@ -4,11 +4,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EmptyNotes from '../components/EmptyNotes';
 import CreateFolder from '../components/CreateFolder';
+import NotesListScreen from './NotesListScreen';
 
 const Stack = createStackNavigator()
 const TOKEN = 'authToken'
 
-const FolderListScreen = () => {
+const FolderListScreen = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [folderName, setFolderName] = useState('')
     const [description, setDescription] = useState('')
@@ -18,13 +19,13 @@ const FolderListScreen = () => {
         const loadNotes = async() => {
             try{
                 const token = await AsyncStorage.getItem(TOKEN)
-                console.log(token)
+                // console.log(token)
                 const data = await fetch('http://localhost:3000/user/folders',{
                     headers: { "Authorization": `Bearer ${token}` }
                 })
                 const result = await data.json()
                 setNotes(result)
-                console.log(result)
+                // console.log(result)
             }catch(err){
                 console.log(err)
             }
@@ -84,7 +85,7 @@ const FolderListScreen = () => {
                 <ScrollView style={styles.listContainer}>
                     {
                         notes.map((ele,idx) => (
-                            <TouchableOpacity key={idx} style={styles.folderCard}>
+                            <TouchableOpacity key={idx} style={styles.folderCard} onPress={() => navigation.navigate("Folder", { folder: ele })}>
                             <Text style={styles.folderName}>{ele.name}</Text>
                             <Text style={styles.folderDesc}>{ele.description}</Text>
                             </TouchableOpacity>
@@ -113,6 +114,7 @@ const Notes = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen name = 'Folder List' component={FolderListScreen} ></Stack.Screen>
+            <Stack.Screen name = "Folder" component={NotesListScreen}></Stack.Screen>
         </Stack.Navigator>
     )
 }

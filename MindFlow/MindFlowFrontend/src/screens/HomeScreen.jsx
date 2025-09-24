@@ -108,7 +108,7 @@ const HomeScreen = ({navigation}) => {
 const Main = () => {
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name = "Home" component={HomeScreen}></Drawer.Screen>
+      <Drawer.Screen name = "Home" component={HomeScreen} ></Drawer.Screen>
       <Drawer.Screen name = "Notes" component={Notes}></Drawer.Screen>
       <Drawer.Screen name = "Profile" component={ProfileScreen}></Drawer.Screen>
     </Drawer.Navigator>
