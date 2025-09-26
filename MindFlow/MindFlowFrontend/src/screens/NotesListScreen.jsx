@@ -5,7 +5,7 @@ import CreateNote from '../components/CreateNotes';
 
 const TOKEN = 'authToken';
 
-const NotesListScreen = ({route}) => {
+const NotesListScreen = ({navigation,route}) => {
   const { folder } = route.params
   console.log(folder)
   const [modalVisible, setModalVisible] = useState(false)
@@ -90,7 +90,7 @@ const NotesListScreen = ({route}) => {
           <FlatList
             data={notes}
             renderItem={renderNote}
-            keyExtractor={(item) => item._id.toString()}
+            keyExtractor={(item,index) => item._id ? item._id.toString() : index.toString()}
             numColumns={2}
             columnWrapperStyle={styles.row}
             contentContainerStyle={{ padding: 10 }}

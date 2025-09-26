@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import EmptyNotes from '../components/EmptyNotes';
 import CreateFolder from '../components/CreateFolder';
 import NotesListScreen from './NotesListScreen';
+import NoteDetailsScreen from './NoteDetailsScreen';
 
 const Stack = createStackNavigator()
 const TOKEN = 'authToken'
@@ -115,6 +116,7 @@ const Notes = () => {
         <Stack.Navigator>
             <Stack.Screen name = 'Folder List' component={FolderListScreen} ></Stack.Screen>
             <Stack.Screen name = "Folder" component={NotesListScreen}></Stack.Screen>
+            <Stack.Screen name="NoteDetails" component={NoteDetailsScreen} />
         </Stack.Navigator>
     )
 }

@@ -1,4 +1,5 @@
 const Note = require('../models/Note')
+const Folder = require('../models/Folder');
 const mongoose = require('mongoose');
 
 const createNote = async (req, res) => {
@@ -31,13 +32,13 @@ const getNotes = async (req, res) => {
 
         console.log(req.params)
         console.log(folderId)
-        const notes = await Note.find({folderId : new mongoose.Types.ObjectId(folderId)}).sort({ createdAt : -1})
+        const notes = await Note.find({folderId : new mongoose.Types.ObjectId(folderId),userId: new mongoose.Types.ObjectId(userId)}).sort({ createdAt : -1})
 
         console.log(notes)
         return res.json(notes)
 
     }catch(err){
-        return res.statu(500).json({Error : err.message})
+        return res.status(500).json({Error : err.message})
     }
 }
 
