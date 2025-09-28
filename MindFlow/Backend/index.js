@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes')
 const profileRoutes = require('./routes/profileRoute')
 const folderRoutes = require('./routes/folderRoutes')
 const noteRoutes = require('./routes/noteRoutes')
+const taskRoutes = require('./routes/taskRoutes')
 
 const PORT = process.env.PORT || 3001
 
@@ -19,6 +20,7 @@ app.use('/auth', authRoutes)
 app.use('/user', profileRoutes)
 app.use('/user', folderRoutes)
 app.use('/user/folders/:folderId', noteRoutes)
+app.use("/user/tasks", taskRoutes);
 
 app.get('/',(req,res) => {
     res.send('Server is running.')

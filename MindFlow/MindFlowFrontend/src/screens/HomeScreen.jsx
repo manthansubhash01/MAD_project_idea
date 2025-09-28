@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Notes from './FolderListScreen';
 import ProfileScreen from './ProfileScreen';
 import { greetings } from '../../assets/greetings';
+import TodoScreen from './TodoScreen';
 
 const Drawer = createDrawerNavigator()
 const TOKEN = 'authToken'
@@ -21,7 +22,7 @@ function getTimeOfDay() {
 }
 
 async function checkFirstLogin() {
-  const today = new Date().toDateString(); // "Sat Sep 20 2025"
+  const today = new Date().toDateString(); 
   const lastLogin = await AsyncStorage.getItem(LAST_LOGIN);
 
   if (lastLogin !== today) {
@@ -60,14 +61,14 @@ const HomeScreen = ({navigation}) => {
     loadData()
   },[])
 
-  const handleLogout = async() => {
-    try{
-      const res = await AsyncStorage.removeItem(TOKEN)
-      navigation.replace("Login");
-    }catch(err){
-      console.log(err)
-    }
-  }
+  // const handleLogout = async() => {
+  //   try{
+  //     const res = await AsyncStorage.removeItem(TOKEN)
+  //     navigation.replace("Login");
+  //   }catch(err){
+  //     console.log(err)
+  //   }
+  // }
 
   async function getRandomGreeting(name, isFirstLogin){
     const time = getTimeOfDay()
@@ -98,9 +99,9 @@ const HomeScreen = ({navigation}) => {
         <View style = {styles.greetingContainer}>
           <Text style = {styles.greetingText}>{greeting}</Text>
         </View>
-        <TouchableOpacity style = {styles.button} onPress={handleLogout}>
+        {/* <TouchableOpacity style = {styles.button} onPress={handleLogout}>
           <Text style = {styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
     </View>
   )
 }
@@ -110,6 +111,7 @@ const Main = () => {
     <Drawer.Navigator>
       <Drawer.Screen name = "Home" component={HomeScreen} ></Drawer.Screen>
       <Drawer.Screen name = "Notes" component={Notes}></Drawer.Screen>
+      <Drawer.Screen name = "Tasks" component={TodoScreen}></Drawer.Screen>
       <Drawer.Screen name = "Profile" component={ProfileScreen}></Drawer.Screen>
     </Drawer.Navigator>
   )
