@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 const API_URL = "http://localhost:3000/user/tasks";
 const TOKEN = 'authToken'
@@ -29,20 +30,36 @@ const PendingTodoScreen = () => {
 
 
   return (
-    <View>
-        <ScrollView style = {styles.scrollContainer}>
+    <View className="flex-1 relative">
+        <ScrollView className="p-4">
             {
                 todos.map((ele,index) => {
                     return (
-                        <View key={index} style = {styles.taskContainer}>
-                            <TouchableOpacity onPress={() => handleComplete(index)}>
-                                <Text>Done</Text>
-                            </TouchableOpacity>
-                            <Text style = {styles.text}>{ele.title}</Text>
-                            <Text style = {styles.text}>{ele.description}</Text>
-                            <TouchableOpacity onPress={() => handleDelete(index)}> 
-                                <Text>Delete</Text>
-                            </TouchableOpacity>
+                        <View 
+                            key={index} 
+                            className="flex-row justify-between items-center bg-french-gray rounded-2xl p-4 my-2 shadow-md"
+                        >
+                            <View className="flex-1">
+                                <Text className="text-black text-lg font-bold">{ele.title}</Text>
+                                <Text className="text-black text-sm mt-1">{ele.description}</Text>
+                            </View>
+
+                            <View className="flex-row space-x-2 ml-4">
+                                <TouchableOpacity
+                                className="m-2 px-3 py-1 rounded-xl justify-center items-center"
+                                onPress={() => handleComplete(index)}
+                                >
+                                <Ionicons name="checkmark-circle" size={30} color="black" />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                className="m-2 px-3 py-1 rounded-xl justify-center items-center"
+                                onPress={() => handleDelete(index)}
+                                >
+                                <MaterialIcons name="delete" size={30} color="#3a3a3aff" />
+                                </TouchableOpacity>
+
+                            </View>
                         </View>
                     )
                 })
@@ -52,48 +69,5 @@ const PendingTodoScreen = () => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-    scrollContainer : {
-        padding : 15
-    },
-    taskContainer : {
-        flex : 1,
-        flexDirection : 'row',
-        justifyContent : 'space-around',
-        alignItems : 'center',
-        height : 60,
-        backgroundColor : '#dfdfdf',
-        borderRadius : 10,
-        padding : 10,
-        margin : 7
-    },
-    text : {
-        fontSize : 18,
-    },
-    checkButton : {
-        height : 30,
-        width : 30,
-        backgroundColor : 'lightgreen'
-    },
-    delete : {
-        height : 30,
-        width : 30,
-        backgroundColor : 'red'
-    },
-    addButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-    margin : 15
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign : 'center'
-  },
-})
 
 export default PendingTodoScreen

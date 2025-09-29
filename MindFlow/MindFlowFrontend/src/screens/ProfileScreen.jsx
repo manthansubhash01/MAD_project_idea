@@ -6,7 +6,7 @@ import ChangePasswordModal from "../components/ChangePasswordModal";
 const API_URL = "http://localhost:3000/user";
 const TOKEN = 'authToken'
 
-export default function ProfileScreen() {
+export default function ProfileScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false)
   const [user, setUser] = useState({});
   const [oldPassword, setOldPassword] = useState("");
@@ -109,24 +109,40 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Name:</Text>
-      <Text style={styles.value}>{user.name}</Text>
+    <View className="flex-1 p-5 bg-white">
+      <Text className="text-5xl font-bold mb-10">Profile</Text>
 
-      <Text style={styles.label}>Email:</Text>
-      <Text style={styles.value}>{user.email}</Text>
+      <View className="mb-5">
+        <View className="flex flex-row">
+          <Text className="text-xl font-bold mt-2 text-jet">Name:</Text>
+          <Text className="text-lg mt-3 ml-3 text-gray">{user.name}</Text>
+        </View>
+
+        <View className="flex flex-row">
+          <Text className="text-xl font-bold mt-2 text-jet">Email:</Text>
+          <Text className="text-lg mt-3 ml-3 text-gray">{user.email}</Text>
+        </View>
+      </View>
 
       <TouchableOpacity
-        style={styles.addButton}
+        className="bg-jet py-3 px-4 rounded-lg mt-4 items-center"
         onPress={() => setModalVisible(true)}
         >
-        <Text style={styles.addButtonText}>Change Password</Text>
+        <Text className="text-white font-semibold text-lg">Change Password</Text>
       </TouchableOpacity>
 
-      <Button title="Delete Account" onPress={handleDeleteUser} color="red" />
+      <TouchableOpacity
+        className="bg-golden-gate-bridge py-3 rounded-xl mt-4 items-center shadow"
+        onPress={handleDeleteUser}
+      >
+        <Text className="text-white text-lg font-semibold">Delete Account</Text>
+      </TouchableOpacity>
 
-      <TouchableOpacity style = {styles.button} onPress={handleLogout}>
-        <Text style = {styles.buttonText}>Logout</Text>
+      <TouchableOpacity
+        className="bg-jet py-3 rounded-xl mt-4 items-center shadow"
+        onPress={handleLogout}
+      >
+        <Text className="text-white text-lg font-semibold">Logout</Text>
       </TouchableOpacity>
 
       <ChangePasswordModal
@@ -142,38 +158,3 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  label: { fontSize: 16, fontWeight: "bold", marginTop: 10 },
-  value: { fontSize: 16, marginBottom: 5 },
-  input: { borderWidth: 1, borderColor: "#ccc", padding: 8, borderRadius: 5, marginBottom: 10 },
-  separator: { height: 1, backgroundColor: "#ddd", marginVertical: 20 },
-  button: {
-    backgroundColor: "#4a90e2",
-    paddingVertical: 14,
-    borderRadius: 12,
-    marginTop: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});

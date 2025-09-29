@@ -31,35 +31,47 @@ const SignupScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Sign Up</Text>
-      <TextInput 
-        placeholder="Name" 
-        value={name} 
-        onChangeText={setName} 
-        style = {styles.input}
-      />
-      <TextInput 
-        placeholder="Email" 
-        value={email} 
-        onChangeText={setEmail} 
-        style = {styles.input}
-      />
+    <View className="flex-1 bg-white px-6 justify-center">
+      <Text className="text-3xl font-bold text-jet text-center mb-8">Sign Up</Text>
+
       <TextInput
+        className="h-12 border border-french-gray rounded-xl px-4 mb-4 bg-white text-jet text-base"
+        placeholder="Name"
+        placeholderTextColor="#b2b6baff"
+        value={name}
+        onChangeText={setName}
+      />
+
+      <TextInput
+        className="h-12 border border-french-gray rounded-xl px-4 mb-4 bg-white text-jet text-base"
+        placeholder="Email"
+        placeholderTextColor="#b2b6baff"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
+      />
+
+      <TextInput
+        className="h-12 border border-french-gray rounded-xl px-4 mb-6 bg-white text-jet text-base"
         placeholder="Password"
+        placeholderTextColor="#b2b6baff"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
-        style = {styles.input}
       />
-      <TouchableOpacity onPress={handleSignup} style = {styles.button}>
-        <Text style = {styles.buttonText}>Signup</Text>
+
+      <TouchableOpacity
+        className="bg-golden-gate-bridge rounded-xl py-3 mb-4 items-center shadow-md"
+        onPress={handleSignup}
+      >
+        <Text className="text-white font-semibold text-lg">Sign Up</Text>
       </TouchableOpacity>
 
-      <Text style={styles.footer}>
+      <Text className="text-center text-french-gray text-sm">
         Already have an account?{" "}
         <Text
-          style={styles.link}
+          className="text-golden-gate-bridge font-semibold"
           onPress={() => navigation.replace("Login")}
         >
           Log in
@@ -69,57 +81,6 @@ const SignupScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
-    paddingHorizontal: 24,
-    justifyContent: "center",
-  },
-  header: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#333",
-    marginBottom: 30,
-    textAlign: "center",
-  },
-  input: {
-    height: 50,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    marginBottom: 16,
-    backgroundColor: "#fff",
-  },
-  button: {
-    backgroundColor: "#4a90e2",
-    paddingVertical: 14,
-    borderRadius: 12,
-    marginTop: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  footer: {
-    marginTop: 20,
-    fontSize: 14,
-    color: "#555",
-    textAlign: "center",
-  },
-  link: {
-    color: "#4a90e2",
-    fontWeight: "600",
-  },
-});
+
 
 export default SignupScreen;

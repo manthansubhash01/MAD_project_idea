@@ -3,25 +3,34 @@ import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput } from 'reac
 
 const CreateNote = ({ visible, title, setTitle, onCancel, onSubmit }) => {
   return (
-    <Modal visible={visible} transparent animationType="slide">
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalBox}>
-          <Text style={styles.modalTitle}>Create New Note</Text>
+     <Modal visible={visible} transparent animationType="slide">
+      <View className="flex-1 bg-black/30 justify-center items-center">
+        <View className="w-4/5 bg-white rounded-xl p-5">
+          <Text className="text-lg font-bold mb-4 text-jet text-center">
+            Create New Note
+          </Text>
 
           <TextInput
+            className="border border-french-gray rounded-lg p-3 mb-4 text-jet"
             placeholder="Note title"
-            style={styles.input}
+            placeholderTextColor="#3a3a3aff"
             value={title}
             onChangeText={setTitle}
           />
 
-          <View style={styles.actions}>
-            <TouchableOpacity style={styles.modalBtn} onPress={onCancel}>
-              <Text style={styles.modalBtnText}>Cancel</Text>
+          <View className="flex-row">
+            <TouchableOpacity
+              className="bg-golden-gate-bridge rounded-3xl px-3 py-3 flex-1 mr-2 items-center"
+              onPress={onSubmit}
+            >
+              <Text className="text-white font-semibold">Create</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.modalBtn} onPress={onSubmit}>
-              <Text style={styles.modalBtnText}>Create</Text>
+            <TouchableOpacity
+              className="bg-white border border-golden-gate-bridge rounded-3xl px-3 py-3 flex-1 ml-2 items-center"
+              onPress={onCancel}
+            >
+              <Text className="text-black font-semibold">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -29,48 +38,5 @@ const CreateNote = ({ visible, title, setTitle, onCancel, onSubmit }) => {
     </Modal>
   )
 }
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalBox: {
-    width: '80%',
-    backgroundColor: 'white',
-    borderRadius: 15,
-    padding: 20,
-  },
-  modalTitle: { 
-    fontSize: 18, 
-    fontWeight: 'bold', 
-    marginBottom: 15 
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
-  },
-  textArea: {
-    minHeight: 100,
-    textAlignVertical: 'top', 
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  modalBtn: {
-    padding: 10,
-  },
-  modalBtnText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#007AFF',
-  }
-})
 
 export default CreateNote;

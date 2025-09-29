@@ -6,6 +6,7 @@ import Notes from './FolderListScreen';
 import ProfileScreen from './ProfileScreen';
 import { greetings } from '../../assets/greetings';
 import TodoScreen from './TodoScreen';
+import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator()
 const TOKEN = 'authToken'
@@ -61,14 +62,14 @@ const HomeScreen = ({navigation}) => {
     loadData()
   },[])
 
-  // const handleLogout = async() => {
-  //   try{
-  //     const res = await AsyncStorage.removeItem(TOKEN)
-  //     navigation.replace("Login");
-  //   }catch(err){
-  //     console.log(err)
-  //   }
-  // }
+  const handleLogout = async() => {
+    try{
+      const res = await AsyncStorage.removeItem(TOKEN)
+      navigation.replace("Login");
+    }catch(err){
+      console.log(err)
+    }
+  }
 
   async function getRandomGreeting(name, isFirstLogin){
     const time = getTimeOfDay()
@@ -97,22 +98,64 @@ const HomeScreen = ({navigation}) => {
   return (
     <View>
         <View style = {styles.greetingContainer}>
-          <Text style = {styles.greetingText}>{greeting}</Text>
+          <Text className="text-black text-3xl font-bold">{greeting}</Text>
         </View>
-        {/* <TouchableOpacity style = {styles.button} onPress={handleLogout}>
-          <Text style = {styles.buttonText}>Logout</Text>
-        </TouchableOpacity> */}
+        <TouchableOpacity
+                className="bg-jet py-3 rounded-xl m-5 items-center shadow"
+                onPress={handleLogout}
+              >
+                <Text className="text-white  text-lg font-semibold">Logout</Text>
+        </TouchableOpacity>
     </View>
   )
 }
 
 const Main = () => {
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name = "Home" component={HomeScreen} ></Drawer.Screen>
-      <Drawer.Screen name = "Notes" component={Notes}></Drawer.Screen>
-      <Drawer.Screen name = "Tasks" component={TodoScreen}></Drawer.Screen>
-      <Drawer.Screen name = "Profile" component={ProfileScreen}></Drawer.Screen>
+    <Drawer.Navigator
+    screenOptions={{
+        headerShown: true, 
+        headerTintColor: "#f04a00ff",
+        drawerActiveTintColor: "#f04a00ff",
+        drawerInactiveTintColor: "#3a3a3aff",
+      }}
+    >
+      <Drawer.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="home" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Notes"
+        component={Notes}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="note" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Tasks"
+        component={TodoScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <FontAwesome name="tasks" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="person" size={size} color={color} />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   )
 }

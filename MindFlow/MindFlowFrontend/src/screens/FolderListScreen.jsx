@@ -65,114 +65,80 @@ const FolderListScreen = ({ navigation }) => {
 
 
   return (
-    <View>
-        {
-            notes.length === 0 ? 
-            <View>
-                <EmptyNotes onCreate = {createFolder}/>
-            </View> 
-            : 
-            <View>
-                <View style={styles.toolbar}>
-                    <Text style={styles.toolbarTitle}>My Folders</Text>
-                    <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={() => setModalVisible(true)}
-                    >
-                    <Text style={styles.addButtonText}>+ Create Folder</Text>
-                    </TouchableOpacity>
-                </View>
+    <View className="flex-1 p-4">
+      {notes.length === 0 ? (
+        <EmptyNotes onCreate={createFolder} />
+      ) : (
+        <>
+          <View className="flex-row justify-between items-center mb-2">
+            <Text className="text-lg font-bold text-jet">My Folders</Text>
+            <TouchableOpacity
+              className="bg-golden-gate-bridge px-4 py-2 rounded-full"
+              onPress={() => setModalVisible(true)}
+            >
+              <Text className="text-white font-semibold">Create Folder</Text>
+            </TouchableOpacity>
+          </View>
 
-                <ScrollView style={styles.listContainer}>
-                    {
-                        notes.map((ele,idx) => (
-                            <TouchableOpacity key={idx} style={styles.folderCard} onPress={() => navigation.navigate("Folder", { folder: ele })}>
-                            <Text style={styles.folderName}>{ele.name}</Text>
-                            <Text style={styles.folderDesc}>{ele.description}</Text>
-                            </TouchableOpacity>
-                        ))
-                    }
-                </ScrollView>
+          <ScrollView className="mt-2">
+            {notes.map((ele, idx) => (
+              <TouchableOpacity
+                key={idx}
+                className="bg-white p-5 m-3 rounded-xl border border-gray-200 shadow"
+                onPress={() => navigation.navigate('Folder', { folder: ele })}
+              >
+                <Text className="text-lg font-semibold text-jet">{ele.name}</Text>
+                {ele.description ? (
+                  <Text className="text-gray-600 mt-1">{ele.description}</Text>
+                ) : null}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
 
-
-                <CreateFolder
-                    visible={modalVisible}
-                    folderName={folderName}
-                    description={description}
-                    setFolderName={setFolderName}
-                    setDescription={setDescription}
-                    onCancel={() => setModalVisible(false)}
-                    onSubmit={handleSubmit}
-                >
-                </CreateFolder>
-            </View>
-        }
+          <CreateFolder
+            visible={modalVisible}
+            folderName={folderName}
+            description={description}
+            setFolderName={setFolderName}
+            setDescription={setDescription}
+            onCancel={() => setModalVisible(false)}
+            onSubmit={handleSubmit}
+          />
+        </>
+      )}
     </View>
   )
 }
 
 const Notes = () => {
     return (
-        <Stack.Navigator>
-            <Stack.Screen name = 'Folder List' component={FolderListScreen} ></Stack.Screen>
-            <Stack.Screen name = "Folder" component={NotesListScreen}></Stack.Screen>
-            <Stack.Screen name="NoteDetails" component={NoteDetailsScreen} />
-        </Stack.Navigator>
+        <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: '#ffffff' },
+        headerTitleStyle: { fontWeight: 'bold', color: '#3a3a3a' }, 
+        headerTintColor: '#f04a00ff',
+        headerTitleAlign: 'center', 
+        headerShadowVisible: false, 
+      }}
+    >
+      <Stack.Screen
+        name="Folder List"
+        component={FolderListScreen}
+        options={{ title: 'My Folders' }}
+      />
+      <Stack.Screen
+        name="Folder"
+        component={NotesListScreen}
+        options={({ route }) => ({ title: route.params.folder.name })}
+      />
+      <Stack.Screen
+        name="NoteDetails"
+        component={NoteDetailsScreen}
+        options={{ title: 'Note Details' }}
+      />
+    </Stack.Navigator>
     )
 }
-
-const styles = StyleSheet.create({
-    toolbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  toolbarTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  listContainer: {
-    padding: 15,
-  },
-  folderCard: {
-    backgroundColor: '#fff',
-    padding: 20,
-    marginBottom: 15,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    shadowColor: '#000',      
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,              
-  },
-  folderName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-  },
-  folderDesc: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 5,
-  },
-});
 
 
 export default Notes

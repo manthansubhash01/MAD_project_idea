@@ -64,107 +64,52 @@ const NotesListScreen = ({navigation,route}) => {
 
   const renderNote = ({ item }) => (
     <TouchableOpacity
-      style={styles.noteCard}
-      onPress={() => navigation.navigate("NoteDetails", { note: item })}
+      className="bg-white flex-1 m-2 p-4 rounded-xl border border-gray-200 h-32 justify-center items-center shadow"
+      onPress={() => navigation.navigate('NoteDetails', { note: item })}
     >
-      <Text style={styles.noteTitle} numberOfLines={2}>{item.title}</Text>
+      <Text className="text-center text-lg font-semibold text-jet" numberOfLines={2}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{folder.name}</Text>
-      <Text style={styles.desc}>{folder.description}</Text>
-      <View style={styles.toolbar}>
-          <Text style={styles.toolbarTitle}>My Notes</Text>
-          <TouchableOpacity
-          style={styles.addButton}
+    <View className="flex-1 p-4">
+      <Text className="text-2xl font-bold text-jet">{folder.name}</Text>
+      {folder.description ? (
+        <Text className="text-base text-gray-600 mt-2">{folder.description}</Text>
+      ) : null}
+
+      <View className="flex-row justify-between items-center mt-4 mb-2">
+        <Text className="text-lg font-bold text-jet">My Notes</Text>
+        <TouchableOpacity
+          className="bg-golden-gate-bridge px-4 py-2 rounded-full"
           onPress={() => setModalVisible(true)}
-          >
-          <Text style={styles.addButtonText}>+ Create Note</Text>
-          </TouchableOpacity>
+        >
+          <Text className="text-white font-semibold">Create Note</Text>
+        </TouchableOpacity>
       </View>
 
-      {
-        notes && (
-          <FlatList
-            data={notes}
-            renderItem={renderNote}
-            keyExtractor={(item,index) => item._id ? item._id.toString() : index.toString()}
-            numColumns={2}
-            columnWrapperStyle={styles.row}
-            contentContainerStyle={{ padding: 10 }}
-            showsVerticalScrollIndicator={false}
-          />
-        )
-      }
+      <FlatList
+        data={notes}
+        renderItem={renderNote}
+        keyExtractor={(item, index) => (item._id ? item._id.toString() : index.toString())}
+        numColumns={2}
+        columnWrapperClassName="justify-between"
+        contentContainerStyle={{ paddingVertical: 10 }}
+        showsVerticalScrollIndicator={false}
+      />
 
       <CreateNote
-      visible = {modalVisible}
-      title = {title}
-      setTitle = {setTitle}
-      onCancel = {() => setModalVisible(false)}
-      onSubmit = {handleSubmit} />
+        visible={modalVisible}
+        title={title}
+        setTitle={setTitle}
+        onCancel={() => setModalVisible(false)}
+        onSubmit={handleSubmit}
+      />
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold'
-  },
-  desc: {
-    fontSize: 16,
-    marginTop: 10,
-    color: '#666'
-  },toolbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    zIndex : 300
-  },
-  toolbarTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },noteCard: {
-    backgroundColor: '#fff',
-    flex: 1,
-    margin: 5,
-    padding: 20,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    height: 120, 
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 2,
-  },
-  noteTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    textAlign: 'center',
-  },
-});
 
 export default NotesListScreen

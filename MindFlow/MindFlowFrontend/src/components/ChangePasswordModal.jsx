@@ -26,31 +26,33 @@ const ChangePasswordModal = ({
   
   return (
       <Modal visible={visible} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            <Text style={styles.label}>Change Password</Text>
+        <View className="flex-1 bg-black/30 justify-center items-center">
+          <View className="w-4/5 bg-white rounded-xl p-5">
+            <Text className="text-lg font-bold mb-4 text-black">Change Password</Text>
             <TextInput
-              style={styles.input}
+              className="border border-gray-300 rounded-lg p-3 mb-3"
               placeholder="Old Password"
               secureTextEntry
               value={oldPassword}
               onChangeText={setOldPassword}
             />
             <TextInput
-              style={styles.input}
+              className="border border-gray-300 rounded-lg p-3 mb-4"
               placeholder="New Password"
               secureTextEntry
               value={newPassword}
               onChangeText={setNewPassword}
             />
 
-            <View style={styles.actions}>
-              <TouchableOpacity style={styles.modalBtn} onPress={onCancel}>
-                <Text style={styles.modalBtnText}>Cancel</Text>
+            <View className="flex-row">
+              <TouchableOpacity className="bg-golden-gate-bridge rounded-3xl px-2 py-2 flex-1 ml-2 items-center"
+               onPress={onSubmit}>
+                <Text className="text-white font-semibold">Update</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.modalBtn} onPress={onSubmit}>
-                <Text style={styles.modalBtnText}>Update Password</Text>
+              <TouchableOpacity className="bg-white border border-golden-gate-bridge rounded-3xl px-2 py-2 flex-1 ml-2 items-center"
+               onPress={onCancel}>
+                <Text className="text-black font-semibold">Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -58,33 +60,5 @@ const ChangePasswordModal = ({
       </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    modalBox: {
-        width: '80%',
-        backgroundColor: 'white',
-        borderRadius: 15,
-        padding: 20,
-    },
-    modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        padding: 10,
-        marginBottom: 10,
-    },
-    actions: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-})
-
 
 export default ChangePasswordModal;
