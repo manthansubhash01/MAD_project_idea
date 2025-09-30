@@ -52,10 +52,10 @@ const CreateTodo = ({visible,title,description,priority,setTitle,setDescription,
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-1 bg-french-gray rounded-full py-3 m-2 items-center"
+              className="flex-1 bg-jet rounded-full m-2 py-3 items-center"
               onPress={onCancel}
             >
-              <Text className="text-black font-semibold text-base">Cancel</Text>
+              <Text className="text-white font-semibold text-base">Cancel</Text>
             </TouchableOpacity>
             
           </View>

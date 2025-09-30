@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { navigationRef } from './src/utils/navigation';
 import { StyleSheet, Text, View } from 'react-native';
 import Main from './src/screens/HomeScreen';
 import SignupScreen from './src/screens/SignupScreen';
@@ -11,7 +12,7 @@ const Stack = createStackNavigator()
 
 export default function App() {
   return (
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator>
           <Stack.Screen name = "Dashboard" component={Main} options={{ headerShown: false }}></Stack.Screen>
           <Stack.Screen name = "Signup" component={SignupScreen}></Stack.Screen>

@@ -13,10 +13,10 @@ const getTask = async (req, res) => {
 
 const createTask = async(req,res) => {
     try {
-        const { title, description, priority, status } = req.body;
+        const { title, description, priority, isCompleted } = req.body;
         const userId = req.user.id;
 
-        const task = new Task({ title, description, priority, status, userId });
+        const task = new Task({ title, description, priority, isCompleted, userId });
         await task.save();
         res.status(201).json(task)
     } catch (err) {

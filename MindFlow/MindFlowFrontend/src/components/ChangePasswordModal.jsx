@@ -50,9 +50,9 @@ const ChangePasswordModal = ({
                 <Text className="text-white font-semibold">Update</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="bg-white border border-golden-gate-bridge rounded-3xl px-2 py-2 flex-1 ml-2 items-center"
+              <TouchableOpacity className="bg-jet rounded-3xl px-3 py-3 flex-1 ml-2 items-center"
                onPress={onCancel}>
-                <Text className="text-black font-semibold">Cancel</Text>
+                <Text className="text-white font-semibold">Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
