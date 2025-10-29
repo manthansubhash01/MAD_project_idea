@@ -16,7 +16,7 @@ const NotesListScreen = ({navigation,route}) => {
     try{
         const token = await AsyncStorage.getItem(TOKEN)
         console.log(token)
-        const data = await fetch(`http://localhost:3000/user/folders/${folder._id}/note`,{
+        const data = await fetch(`https://mad-project-idea.onrender.com/user/folders/${folder._id}/note`,{
             headers: { "Authorization": `Bearer ${token}` }
         })
         const result = await data.json()
@@ -35,7 +35,7 @@ const NotesListScreen = ({navigation,route}) => {
     try {
       const token = await AsyncStorage.getItem(TOKEN);
       console.log(folder._id)
-      const res = await fetch(`http://localhost:3000/user/folders/${folder._id}/note`, {
+      const res = await fetch(`https://mad-project-idea.onrender.com/user/folders/${folder._id}/note`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -14,7 +14,7 @@ import ChangePasswordModal from "../components/ChangePasswordModal";
 import DeleteAccountModal from "../components/DeleteAccountModal";
 import { navigate } from "../utils/navigation";
 
-const API_URL = "http://localhost:3000/user";
+const API_URL = "https://mad-project-idea.onrender.com/user";
 const TOKEN = "authToken";
 
 export default function ProfileScreen({ navigation }) {

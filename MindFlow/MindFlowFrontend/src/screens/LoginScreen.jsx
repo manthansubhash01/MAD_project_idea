@@ -23,7 +23,7 @@ const LoginScreen = ({navigation}) => {
         if(user){
           setEmail(user.email)
           setPassword(user.password)
-          const res = await fetch('http://localhost:3000/auth/login',{
+          const res = await fetch('https://mad-project-idea.onrender.com/auth/login',{
             method : 'POST',
             headers : { "Content-Type": "application/json" },
             body : JSON.stringify({email, password})
@@ -45,7 +45,7 @@ const LoginScreen = ({navigation}) => {
 
   const handleLogin = async () => {
     try{
-        const res = await fetch('http://localhost:3000/auth/login',{
+        const res = await fetch('https://mad-project-idea.onrender.com/auth/login',{
             method : 'POST',
             headers : { "Content-Type": "application/json" },
             body : JSON.stringify({email, password})

@@ -1,11 +1,12 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState, useContext} from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateTodo from '../components/CreateTodoModal';
 import { MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { TodoContext } from '../contexts/TodoContext';
 
-const API_URL = "http://localhost:3000/user/tasks";
+const API_URL = "https://mad-project-idea.onrender.com/user/tasks";
 const TOKEN = 'authToken'
 
 const PendingTodoScreen = () => {
@@ -13,26 +14,28 @@ const PendingTodoScreen = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [priority, setPriority] = useState('medium')
-    const [todos, setTodos] = useState([])
 
-    async function loadTodos(){
-        try{
-            const token = await AsyncStorage.getItem(TOKEN)
+    const {todos, setTodos} = useContext(TodoContext)
+    // const [todos, setTodos] = useState([])
 
-            const data = await fetch(API_URL,{
-                headers: { "Authorization": `Bearer ${token}` }
-            })
-            const result = await data.json()
-            setTodos(result.filter((ele) => !ele.isCompleted))
-            console.log(result)
-        }catch(err){
-            console.log(err)
-        }
-    }
+    // async function loadTodos(){
+    //     try{
+    //         const token = await AsyncStorage.getItem(TOKEN)
 
-    useEffect(() => {
-        loadTodos()
-    },[todos])
+    //         const data = await fetch(API_URL,{
+    //             headers: { "Authorization": `Bearer ${token}` }
+    //         })
+    //         const result = await data.json()
+    //         setTodos(result.filter((ele) => !ele.isCompleted))
+    //         console.log(result)
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     loadTodos()
+    // },[todos])
 
      const createTask = async (title, description, priority) => {
         try{

@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState, useContext} from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -7,6 +7,8 @@ import ProfileScreen from './ProfileScreen';
 import { greetings } from '../../assets/greetings';
 import TodoScreen from './TodoScreen';
 import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
+import { TodoProvider } from '../contexts/TodoContext';
+import { TodoContext } from '../contexts/TodoContext';
 
 const Drawer = createDrawerNavigator()
 const TOKEN = 'authToken'
@@ -34,6 +36,7 @@ async function checkFirstLogin() {
 }
 
 const HomeScreen = ({navigation}) => {
+  const {todos, setTodos,total, setTotal} = useContext(TodoContext)
   const [name,setName] = useState('')
   const [greeting , setGreeting] = useState('')
 
@@ -107,7 +110,7 @@ const HomeScreen = ({navigation}) => {
           </View>
           <View className="h-48 w-2/5 p-5 m-5 mt-2 ml-2 rounded-3xl bg-black">
             <MaterialIcons name="checklist" size={52} color="white" />
-            <Text className="text-white text-xl mt-5">0 Tasks</Text>
+            <Text className="text-white text-xl mt-5">{total} Tasks</Text>
             <Text className="text-white font-bold text-2xl">To do List</Text>
           </View>
         </View>
@@ -123,6 +126,7 @@ const HomeScreen = ({navigation}) => {
 
 const Main = () => {
   return (
+    <TodoProvider>
     <Drawer.Navigator
     screenOptions={{
         headerShown: true, 
@@ -168,6 +172,7 @@ const Main = () => {
         }}
       />
     </Drawer.Navigator>
+    </TodoProvider>
   )
 }
 

@@ -21,7 +21,7 @@ const FolderListScreen = ({ navigation }) => {
             try{
                 const token = await AsyncStorage.getItem(TOKEN)
                 // console.log(token)
-                const data = await fetch('http://localhost:3000/user/folders',{
+                const data = await fetch('https://mad-project-idea.onrender.com/user/folders',{
                     headers: { "Authorization": `Bearer ${token}` }
                 })
                 const result = await data.json()
@@ -37,7 +37,7 @@ const FolderListScreen = ({ navigation }) => {
     const createFolder = async(folderName, description) => {
         try{
             const token = await AsyncStorage.getItem(TOKEN)
-            const res = await fetch('http://localhost:3000/user/folders', {
+            const res = await fetch('https://mad-project-idea.onrender.com/user/folders', {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',

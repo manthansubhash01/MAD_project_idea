@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://localhost:3000/user";
+const API_URL = "https://mad-project-idea.onrender.com/user";
 const TOKEN = "authToken";
 
 const ChangePasswordModal = ({

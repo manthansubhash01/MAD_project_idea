@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,11 +8,13 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
+import { TodoContext } from '../contexts/TodoContext';
 
-const API_URL = "http://localhost:3000/user/tasks";
+const API_URL = "https://mad-project-idea.onrender.com/user/tasks";
 const TOKEN = "authToken";
 
 const CompletedTodoScreen = () => {
+  // const {todos, setTodos,total, setTotal} = useContext(TodoContext)
   const [todos, setTodos] = useState([]);
   const [total, setTotal] = useState(0);
 
