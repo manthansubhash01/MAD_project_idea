@@ -1,81 +1,64 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-  Button,
-  StyleSheet,
-} from 'react-native';
+import React from 'react';
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { RichText, Toolbar, useEditorBridge,DEFAULT_TOOLBAR_ITEMS } from '@10play/tentap-editor';
 
-
-const NoteEditor = ({ note: initialNote, onSave }) => {
-  const [note, setNote] = useState(initialNote || { title: 'Untitled', blocks: [] });
-  const [blocks, setBlocks] = useState(initialNote?.blocks || []);
-
+const NoteEditor = () => {
+  const editor = useEditorBridge({
+    autofocus: true,
+    avoidIosKeyboard: true,
+  });
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.titleBar}>
-        <TextInput
-          value={note.title}
-          onChangeText={(t) => setNote({ ...note, title: t })}
-          placeholder="Title"
-          style={styles.titleInput}
-        />
-      </View>
+    <View style={styles.container}>
+      <RichText editor={editor} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{
+          position: 'absolute',
+          width: '100%',
+          bottom: 0,
+        }}
+      >
+        <Toolbar editor={editor} />
+      </KeyboardAvoidingView>
     </View>
-    )
+
+  );
 };
 
 const styles = StyleSheet.create({
-  titleBar: {
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  titleInput: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: '700',
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#ccc',
-    paddingVertical: 4,
-  },
-  paragraph: {
-    fontSize: 16,
-    minHeight: 36,
-    textAlignVertical: 'top',
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#ccc',
-    paddingVertical: 4,
-  },
-  checkbox: {
-    width: 22,
-    height: 22,
-    borderWidth: 1,
-    borderRadius: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  todo: {
-    marginLeft: 8,
+  container: {
     flex: 1,
-    fontSize: 16,
+    backgroundColor: '#fff',
+    position: 'relative',
   },
-  actions: {
-    flexDirection: 'row',
-    marginTop: 6,
-    justifyContent: 'space-between',
+  editorContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
   },
-  actionText: {
-    fontSize: 12,
-    color: '#007AFF',
-    marginRight: 10,
+  toolbarWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 60,
+    backgroundColor: '#fafafa',
+    borderTopWidth: 0.5,
+    borderTopColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
+    elevation: 10,
+  },
+  toolbar: {
+    flex: 1,
+    zIndex: 1100,
+    backgroundColor: '#fafafa',
+    width: '100%', 
+  },
+  editor: {
+    flex: 1,
   },
 });
 

@@ -97,15 +97,26 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <View>
-        <View style = {styles.greetingContainer}>
-          <Text className="text-black text-3xl font-bold">{greeting}</Text>
+        <View className="p-5 m-4 mb-2 rounded-3xl bg-jet">
+          <Text className="text-white text-3xl font-semi-bold">{greeting}</Text>
         </View>
-        <TouchableOpacity
+        <View className="flex flex-row">
+          <View className="h-48 w-3/6 p-5 m-5 mt-2 mr-2 rounded-3xl bg-golden-gate-bridge">
+            <Text className="text-white font-bold text-2xl">Today</Text>
+            <Text className="text-white text-2xl">Tasks</Text>
+          </View>
+          <View className="h-48 w-2/5 p-5 m-5 mt-2 ml-2 rounded-3xl bg-black">
+            <MaterialIcons name="checklist" size={52} color="white" />
+            <Text className="text-white text-xl mt-5">0 Tasks</Text>
+            <Text className="text-white font-bold text-2xl">To do List</Text>
+          </View>
+        </View>
+        {/* <TouchableOpacity
                 className="bg-jet py-3 rounded-xl m-5 items-center shadow"
                 onPress={handleLogout}
               >
                 <Text className="text-white  text-lg font-semibold">Logout</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
     </View>
   )
 }
