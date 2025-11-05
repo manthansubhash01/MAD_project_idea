@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChangePasswordModal from "../components/ChangePasswordModal";
 import DeleteAccountModal from "../components/DeleteAccountModal";
 import { navigate } from "../utils/navigation";
+import { CommonActions } from '@react-navigation/native';
 
 const API_URL = "https://mad-project-idea.onrender.com/user";
 const TOKEN = "authToken";
@@ -80,7 +81,12 @@ export default function ProfileScreen({ navigation }) {
     if (res.ok) {
       Alert.alert("Deleted", data.message);
       // setIsLoggedIn(false);
-      navigate("Login");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        })
+      );
     } else {
       Alert.alert("Error", data.error);
     }
@@ -93,7 +99,12 @@ export default function ProfileScreen({ navigation }) {
   const handleLogout = async () => {
     try {
       const res = await AsyncStorage.removeItem(TOKEN);
-      navigate("Login");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        })
+      );
     } catch (err) {
       console.log(err);
     }

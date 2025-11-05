@@ -14,9 +14,9 @@ export default function App() {
   return (
       <NavigationContainer ref={navigationRef}>
         <Stack.Navigator>
-          <Stack.Screen name = "Dashboard" component={Main} options={{ headerShown: false }}></Stack.Screen>
-          <Stack.Screen name = "Signup" component={SignupScreen}></Stack.Screen>
-          <Stack.Screen name = "Login" component={LoginScreen}></Stack.Screen>
+          <Stack.Screen name = "Dashboard" component={Main} options={{ headerShown: false, gestureEnabled: false }}></Stack.Screen>
+          <Stack.Screen name = "Signup" component={SignupScreen} options={{ headerLeft: () => null, gestureEnabled: false }}></Stack.Screen>
+          <Stack.Screen name = "Login" component={LoginScreen} options={{ headerLeft: () => null, gestureEnabled: false }}></Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
   );

@@ -1,6 +1,6 @@
 import React,{useEffect, useState, useContext} from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,Image } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Notes from './FolderListScreen';
 import ProfileScreen from './ProfileScreen';
@@ -9,6 +9,7 @@ import TodoScreen from './TodoScreen';
 import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { TodoProvider } from '../contexts/TodoContext';
 import { TodoContext } from '../contexts/TodoContext';
+import TaskProgressCircle from '../components/TaskProgressCircle';
 
 const Drawer = createDrawerNavigator()
 const TOKEN = 'authToken'
@@ -101,25 +102,35 @@ const HomeScreen = ({navigation}) => {
   return (
     <View>
         <View className="p-5 m-4 mb-2 rounded-3xl bg-jet">
-          <Text className="text-white text-3xl font-semi-bold">{greeting}</Text>
+          <Text className="text-white text-xl font-semibold">{greeting}</Text>
         </View>
-        <View className="flex flex-row">
-          <View className="h-48 w-3/6 p-5 m-5 mt-2 mr-2 rounded-3xl bg-golden-gate-bridge">
-            <Text className="text-white font-bold text-2xl">Today</Text>
-            <Text className="text-white text-2xl">Tasks</Text>
-          </View>
-          <View className="h-48 w-2/5 p-5 m-5 mt-2 ml-2 rounded-3xl bg-black">
+
+        <View className="flex flex-row gap-2 px-5">
+          <View className="flex-[2] h-48 p-5 rounded-3xl bg-black justify-normal">
             <MaterialIcons name="checklist" size={52} color="white" />
-            <Text className="text-white text-xl mt-5">{total} Tasks</Text>
+            <Text className="text-white text-xl mt-3">{todos.length} Tasks</Text>
             <Text className="text-white font-bold text-2xl">To do List</Text>
           </View>
+
+          <View className="flex-[3] h-48 p-5 rounded-3xl bg-golden-gate-bridge">
+            <Text className="text-white font-bold text-2xl">Today</Text>
+            <Text className="text-white text-xl">Tasks</Text>
+            <Text className="text-white text-lg mt-2">{todos.length !== 0 ? `1. ${todos[0].title}` : "Nothing to do"}</Text>
+            <Text className="text-white text-lg mt-1">   ... {todos.length-1} more</Text>
+          </View> 
         </View>
-        {/* <TouchableOpacity
-                className="bg-jet py-3 rounded-xl m-5 items-center shadow"
-                onPress={handleLogout}
-              >
-                <Text className="text-white  text-lg font-semibold">Logout</Text>
-        </TouchableOpacity> */}
+
+        <View className = "flex flex-row gap-2 mt-10">
+          <View className="p-5 rounded-3xl items-center">
+            <TaskProgressCircle total={total} completed={total-todos.length}/>
+            <Text className="text-jet mt-3 text-xl font-semibold">Task Progress</Text>
+          </View>
+          <View className="">
+            <Image source={require("../../assets/9175151-removebg-preview(1).png")}
+            style={{ width: 150, height: 150}} className="mt-5"/>
+          </View>
+        </View>
+
     </View>
   )
 }
