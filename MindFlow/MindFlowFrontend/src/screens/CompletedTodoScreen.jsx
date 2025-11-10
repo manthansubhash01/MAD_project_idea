@@ -60,12 +60,12 @@ const CompletedTodoScreen = () => {
 
   return (
     <View>
-      <View className="bg-black flex flex-row m-5 rounded-3xl p-10 justify-evenly items-center">
+      <View className="bg-jet flex flex-row m-5 rounded-3xl p-10 justify-evenly items-center">
         <View>
           <Text className="text-white text-3xl font-bold">Todo Done</Text>
           <Text className="text-gray-200 text-lg">Keep it up</Text>
         </View>
-        <View className="bg-golden-gate-bridge flex flex-row m-5 w-32 h-32 rounded-full justify-center items-center">
+        <View className="bg-powderBlue flex flex-row m-5 w-32 h-32 rounded-full justify-center items-center">
           <Text className="text-white text-5xl font-bold">{todos.length}</Text>
           <Text className="text-white text-5xl font-bold">/</Text>
           <Text className="text-white text-5xl font-bold">{total}</Text>
@@ -77,15 +77,26 @@ const CompletedTodoScreen = () => {
           return (
             <View
               key={index}
-              className="flex-row justify-between items-center bg-french-gray rounded-2xl p-4 my-2 shadow-md"
+              className="flex-row justify-between items-center bg-white rounded-2xl p-4 my-2 shadow-md"
             >
               <View className="flex-1">
-                <Text className="text-black text-lg font-bold">
-                  {ele.title}
-                </Text>
-                <Text className="text-black text-sm mt-1">
-                  {ele.description}
-                </Text>
+                  <Text className="text-jet text-lg font-bold">{ele.title}</Text>
+                  {/* <Text className="text-jet text-sm mt-1">{ele.description}</Text> */}
+                  {
+                      ele.priority === "high" ? (
+                          <View className = "bg-highBg w-20 items-center rounded-xl">
+                              <Text className = "text-highText">Urgent</Text>
+                          </View>
+                      ) : ele.priority === "medium" ? (
+                          <View className = "bg-mediumBg w-20 items-center rounded-xl">
+                              <Text className = "text-mediumText">Important</Text>
+                          </View>
+                      ) : (
+                          <View className = "bg-lowBg w-20 items-center rounded-xl">
+                              <Text className = "text-lowText">Minor</Text>
+                          </View>
+                      )
+                  }
               </View>
 
               <View className="flex-row space-x-2 ml-4">
@@ -93,7 +104,7 @@ const CompletedTodoScreen = () => {
                   className="m-2 px-3 py-1 rounded-xl justify-center items-center"
                   onPress={() => handleDelete(index)}
                 >
-                  <MaterialIcons name="delete" size={30} color="#3a3a3aff" />
+                  <MaterialIcons name="delete" size={30} color="#b2b6bfff" />
                 </TouchableOpacity>
               </View>
             </View>

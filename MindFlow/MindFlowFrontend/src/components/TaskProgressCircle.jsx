@@ -21,7 +21,7 @@ const TaskProgressCircle = ({ total = 10, completed = 4, size = 150, strokeWidth
         />
 
         <Circle
-          stroke= "#f04a00ff"
+          stroke= "#8FB9E1"
           fill="none"
           cx={size / 2}
           cy={size / 2}

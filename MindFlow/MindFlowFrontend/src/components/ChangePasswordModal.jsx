@@ -45,7 +45,7 @@ const ChangePasswordModal = ({
             />
 
             <View className="flex-row">
-              <TouchableOpacity className="bg-golden-gate-bridge rounded-3xl px-2 py-2 flex-1 ml-2 items-center"
+              <TouchableOpacity className="bg-powderBlue rounded-3xl px-2 py-2 flex-1 ml-2 items-center"
                onPress={onSubmit}>
                 <Text className="text-white font-semibold">Update</Text>
               </TouchableOpacity>

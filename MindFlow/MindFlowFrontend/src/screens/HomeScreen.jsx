@@ -10,6 +10,7 @@ import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { TodoProvider } from '../contexts/TodoContext';
 import { TodoContext } from '../contexts/TodoContext';
 import TaskProgressCircle from '../components/TaskProgressCircle';
+import CalendarScreen from "./CalenderScreen"
 
 const Drawer = createDrawerNavigator()
 const TOKEN = 'authToken'
@@ -101,22 +102,22 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <View>
-        <View className="p-5 m-4 mb-2 rounded-3xl bg-jet">
+        <View className="p-5 m-4 mb-2 rounded-3xl bg-powderBlue">
           <Text className="text-white text-xl font-semibold">{greeting}</Text>
         </View>
 
         <View className="flex flex-row gap-2 px-5">
-          <View className="flex-[2] h-48 p-5 rounded-3xl bg-black justify-normal">
+          <View className="flex-[2] h-48 p-5 rounded-3xl bg-columbiaBlue justify-normal">
             <MaterialIcons name="checklist" size={52} color="white" />
             <Text className="text-white text-xl mt-3">{todos.length} Tasks</Text>
             <Text className="text-white font-bold text-2xl">To do List</Text>
           </View>
 
-          <View className="flex-[3] h-48 p-5 rounded-3xl bg-golden-gate-bridge">
+          <View className="flex-[3] h-48 p-5 rounded-3xl bg-jordyBlue">
             <Text className="text-white font-bold text-2xl">Today</Text>
             <Text className="text-white text-xl">Tasks</Text>
             <Text className="text-white text-lg mt-2">{todos.length !== 0 ? `1. ${todos[0].title}` : "Nothing to do"}</Text>
-            <Text className="text-white text-lg mt-1">   ... {todos.length-1} more</Text>
+            <Text className="text-white text-lg mt-1">   ... {todos.length == 0 ? 0 : todos.length-1} more</Text>
           </View> 
         </View>
 
@@ -141,9 +142,9 @@ const Main = () => {
     <Drawer.Navigator
     screenOptions={{
         headerShown: true, 
-        headerTintColor: "#f04a00ff",
-        drawerActiveTintColor: "#f04a00ff",
-        drawerInactiveTintColor: "#3a3a3aff",
+        headerTintColor: "#8FB9E1",
+        drawerActiveTintColor: "#71A5E9",
+        drawerInactiveTintColor: "#7284BE",
       }}
     >
       <Drawer.Screen
@@ -170,6 +171,15 @@ const Main = () => {
         options={{
           drawerIcon: ({ color, size }) => (
             <FontAwesome name="tasks" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <FontAwesome name="calendar" size={size} color={color} />
           ),
         }}
       />

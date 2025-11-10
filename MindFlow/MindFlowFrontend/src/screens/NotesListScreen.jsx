@@ -83,7 +83,7 @@ const NotesListScreen = ({navigation,route}) => {
       <View className="flex-row justify-between items-center mt-4 mb-2">
         <Text className="text-lg font-bold text-jet">My Notes</Text>
         <TouchableOpacity
-          className="bg-golden-gate-bridge px-4 py-2 rounded-full"
+          className="bg-powderBlue px-4 py-2 rounded-full"
           onPress={() => setModalVisible(true)}
         >
           <Text className="text-white font-semibold">Create Note</Text>

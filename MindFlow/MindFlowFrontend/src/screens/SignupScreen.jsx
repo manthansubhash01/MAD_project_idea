@@ -62,7 +62,7 @@ const SignupScreen = ({ navigation }) => {
       />
 
       <TouchableOpacity
-        className="bg-golden-gate-bridge rounded-xl py-3 mb-4 items-center shadow-md"
+        className="bg-powderBlue rounded-xl py-3 mb-4 items-center shadow-md"
         onPress={handleSignup}
       >
         <Text className="text-white font-semibold text-lg">Sign Up</Text>

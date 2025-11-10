@@ -73,7 +73,7 @@ const FolderListScreen = ({ navigation }) => {
           <View className="flex-row justify-between items-center mb-2">
             <Text className="text-lg font-bold text-jet">My Folders</Text>
             <TouchableOpacity
-              className="bg-golden-gate-bridge px-4 py-2 rounded-full"
+              className="bg-powderBlue px-4 py-2 rounded-full"
               onPress={() => setModalVisible(true)}
             >
               <Text className="text-white font-semibold">Create Folder</Text>
@@ -116,7 +116,7 @@ const Notes = () => {
       screenOptions={{
         headerStyle: { backgroundColor: '#ffffff' },
         headerTitleStyle: { fontWeight: 'bold', color: '#3a3a3a' }, 
-        headerTintColor: '#f04a00ff',
+        headerTintColor: '#71A5E9',
         headerTitleAlign: 'center', 
         headerShadowVisible: false, 
       }}

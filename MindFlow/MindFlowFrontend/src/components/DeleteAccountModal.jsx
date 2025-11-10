@@ -19,7 +19,7 @@ const DeleteAccountModal = ({ visible, onCancel, onDelete }) => {
 
           <View className="flex-row">
             <TouchableOpacity
-              className="bg-golden-gate-bridge rounded-3xl px-4 py-3 flex-1 items-center mr-2"
+              className="bg-powderBlue rounded-3xl px-4 py-3 flex-1 items-center mr-2"
               onPress={onDelete}
             >
               <Text className="text-white font-semibold">Delete</Text>

@@ -28,7 +28,7 @@ const CreateFolder = ({visible,folderName,description,setFolderName,setDescripti
 
           <View className="flex-row">
             <TouchableOpacity
-              className="bg-golden-gate-bridge rounded-3xl px-3 py-3 flex-1 mr-2 items-center"
+              className="bg-powderBlue rounded-3xl px-3 py-3 flex-1 mr-2 items-center"
               onPress={onSubmit}
             >
               <Text className="text-white font-semibold">Create</Text>

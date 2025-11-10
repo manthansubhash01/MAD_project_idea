@@ -24,7 +24,7 @@ export default function TodoScreen() {
             );
           }
         },
-        tabBarActiveTintColor: "#f04a00ff",
+        tabBarActiveTintColor: "#7284BE",
         tabBarInactiveTintColor: "#3a3a3aff",
       })}
     >

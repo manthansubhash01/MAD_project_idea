@@ -91,7 +91,7 @@ const LoginScreen = ({navigation}) => {
       />
 
       <TouchableOpacity
-        className="bg-golden-gate-bridge rounded-xl py-3 mb-4 items-center shadow-md"
+        className="bg-powderBlue rounded-xl py-3 mb-4 items-center shadow-md"
         onPress={handleLogin}
       >
         <Text className="text-white font-semibold text-lg">Log In</Text>
@@ -100,7 +100,7 @@ const LoginScreen = ({navigation}) => {
       <Text className="text-center text-french-gray text-sm">
         Don’t have an account?{" "}
         <Text
-          className="text-golden-gate-bridge font-semibold"
+          className="text-powderBlue font-semibold"
           onPress={() => navigation.replace("Signup")}
         >
           Sign up

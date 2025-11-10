@@ -45,7 +45,7 @@ const CreateTodo = ({visible,title,description,priority,setTitle,setDescription,
           <View className="flex-row justify-between">
 
             <TouchableOpacity
-              className="flex-1 bg-golden-gate-bridge rounded-full m-2 py-3 items-center"
+              className="flex-1 bg-powderBlue rounded-full m-2 py-3 items-center"
               onPress={onSubmit}
             >
               <Text className="text-white font-bold text-base">Create</Text>

@@ -122,11 +122,11 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <View className="flex-1 p-5 bg-white">
-      <Text className="text-5xl font-bold mb-10">Profile</Text>
+      <Text className="text-2xl font-bold mb-10">Profile</Text>
 
       <View className="flex justify-center items-center mb-10">
         <Image
-          className="h-40 w-40 rounded-full border-8 border-golden-gate-bridge"
+          className="h-40 w-40 rounded-full border-8 border-powderBlue"
           source={{
             uri: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F018%2F765%2F757%2Foriginal%2Fuser-profile-icon-in-flat-style-member-avatar-illustration-on-isolated-background-human-permission-sign-business-concept-vector.jpg&f=1&nofb=1&ipt=cf5dba5af2e2209695e811af2456ae3290e6c830a14e5ccc15e4a8f063fee78e",
           }}
@@ -135,17 +135,17 @@ export default function ProfileScreen({ navigation }) {
 
       <View className="mb-5">
         <View className="flex flex-row">
-          <Text className="text-xl font-bold mt-2 text-jet">Name:</Text>
-          <Text className="text-lg mt-3 ml-3 text-gray">{user.name}</Text>
+          <Text className="text-lg font-semibold mt-2 text-jet">Name:</Text>
+          <Text className="text mt-3 ml-3 text-gray">{user.name}</Text>
         </View>
 
         <View className="flex flex-row">
-          <Text className="text-xl font-bold mt-2 text-jet">Email:</Text>
-          <Text className="text-lg mt-3 ml-3 text-gray">{user.email}</Text>
+          <Text className="text-lg font-semibold mt-2 text-jet">Email:</Text>
+          <Text className="text mt-3 ml-3 text-gray">{user.email}</Text>
         </View>
       </View>
 
-      <Text className="text-5xl font-bold mb-10">Account</Text>
+      <Text className="text-2xl font-bold mb-10">Account</Text>
 
       <TouchableOpacity
         className="bg-jet py-3 px-4 rounded-lg mt-4 items-center"
@@ -157,7 +157,7 @@ export default function ProfileScreen({ navigation }) {
       </TouchableOpacity>
 
       <TouchableOpacity
-        className="bg-golden-gate-bridge py-3 rounded-xl mt-4 items-center shadow"
+        className="bg-powderBlue py-3 rounded-xl mt-4 items-center shadow"
         onPress={() => setDeleteModalVisible(true)}
       >
         <Text className="text-white text-lg font-semibold">Delete Account</Text>
