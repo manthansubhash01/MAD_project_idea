@@ -1,33 +1,33 @@
-const express = require('express');
-const cors = require('cors')
-const dotenv = require('dotenv').config()
-const connectDB = require('./config/dbConnection')
-const authRoutes = require('./routes/authRoutes')
-const profileRoutes = require('./routes/profileRoute')
-const folderRoutes = require('./routes/folderRoutes')
-const noteRoutes = require('./routes/noteRoutes')
-const taskRoutes = require('./routes/taskRoutes')
-const eventRoutes = require('./routes/eventRoutes')
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv").config();
+const connectDB = require("./config/dbConnection");
+const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("./routes/profileRoute");
+const folderRoutes = require("./routes/folderRoutes");
+const noteRoutes = require("./routes/noteRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+const eventRoutes = require("./routes/eventRoutes");
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001;
 
-const app = express()
+const app = express();
 
-connectDB()
+connectDB();
 
-app.use(cors())
-app.use(express.json())
-app.use('/auth', authRoutes)
-app.use('/user', profileRoutes)
-app.use('/user', folderRoutes)
-app.use('/user/folders/:folderId', noteRoutes)
+app.use(cors());
+app.use(express.json());
+app.use("/auth", authRoutes);
+app.use("/user", profileRoutes);
+app.use("/user", folderRoutes);
+app.use("/user/folders/:folderId", noteRoutes);
 app.use("/user/tasks", taskRoutes);
 app.use("/user/events", eventRoutes);
 
-app.get('/',(req,res) => {
-    res.send('Server is running.')
-})
+app.get("/", (req, res) => {
+  res.send("Server is running.");
+});
 
 app.listen(PORT, () => {
-    console.log(`App is listening on port ${PORT}`)
-})
+  console.log(`App is listening on port ${PORT}`);
+});

@@ -1,40 +1,42 @@
-import isEmpty from 'lodash/isEmpty';
-import React, {useCallback} from 'react';
-import {StyleSheet, Alert, View, Text, TouchableOpacity, Button} from 'react-native';
-import testIDs from '../testID.js';
+import isEmpty from "lodash/isEmpty";
+import React, { useCallback } from "react";
+import {
+  StyleSheet,
+  Alert,
+  View,
+  Text,
+  TouchableOpacity,
+  Button,
+} from "react-native";
+import testIDs from "../testID.js";
 
-const AgendaItem = ({item, onEdit, onDelete}) => {
-
+const AgendaItem = ({ item, onEdit, onDelete }) => {
   const buttonPressed = useCallback(() => {
-    Alert.alert(
-      item.title,
-      item.description || 'No description',
-      [
-        {
-          text: 'Edit',
-          onPress: () => onEdit && onEdit(item),
+    Alert.alert(item.title, item.description || "No description", [
+      {
+        text: "Edit",
+        onPress: () => onEdit && onEdit(item),
+      },
+      {
+        text: "Delete",
+        onPress: () => {
+          Alert.alert(
+            "Delete Event",
+            "Are you sure you want to delete this event?",
+            [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Delete",
+                style: "destructive",
+                onPress: () => onDelete && onDelete(item),
+              },
+            ]
+          );
         },
-        {
-          text: 'Delete',
-          onPress: () => {
-            Alert.alert(
-              'Delete Event',
-              'Are you sure you want to delete this event?',
-              [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Delete',
-                  style: 'destructive',
-                  onPress: () => onDelete && onDelete(item),
-                },
-              ]
-            );
-          },
-          style: 'destructive',
-        },
-        { text: 'Cancel', style: 'cancel' },
-      ]
-    );
+        style: "destructive",
+      },
+      { text: "Cancel", style: "cancel" },
+    ]);
   }, [item, onEdit, onDelete]);
 
   const itemPressed = useCallback(() => {
@@ -74,39 +76,39 @@ export default React.memo(AgendaItem);
 const styles = StyleSheet.create({
   item: {
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderBottomWidth: 1,
-    borderBottomColor: 'lightgrey',
-    flexDirection: 'row'
+    borderBottomColor: "lightgrey",
+    flexDirection: "row",
   },
   itemHourText: {
-    color: 'black'
+    color: "black",
   },
   itemDurationText: {
-    color: 'grey',
+    color: "grey",
     fontSize: 12,
     marginTop: 4,
-    marginLeft: 4
+    marginLeft: 4,
   },
   itemTitleText: {
-    color: 'black',
+    color: "black",
     marginLeft: 16,
-    fontWeight: 'bold',
-    fontSize: 16
+    fontWeight: "bold",
+    fontSize: 16,
   },
   itemButtonContainer: {
     flex: 1,
-    alignItems: 'flex-end'
+    alignItems: "flex-end",
   },
   emptyItem: {
     paddingLeft: 20,
     height: 52,
-    justifyContent: 'center',
+    justifyContent: "center",
     borderBottomWidth: 1,
-    borderBottomColor: 'lightgrey'
+    borderBottomColor: "lightgrey",
   },
   emptyItemText: {
-    color: 'lightgrey',
-    fontSize: 14
-  }
+    color: "lightgrey",
+    fontSize: 14,
+  },
 });

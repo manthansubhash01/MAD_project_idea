@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const eventSchema = new mongoose.Schema({
   title: {
@@ -20,11 +20,11 @@ const eventSchema = new mongoose.Schema({
   },
   duration: {
     type: String,
-    default: '1h',
+    default: "1h",
   },
   userId: {
     type: mongoose.Schema.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
   createdAt: {
@@ -37,9 +37,9 @@ const eventSchema = new mongoose.Schema({
   },
 });
 
-eventSchema.pre('save', function(next) {
+eventSchema.pre("save", function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
-module.exports = mongoose.model('Event', eventSchema);
+module.exports = mongoose.model("Event", eventSchema);
