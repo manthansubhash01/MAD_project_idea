@@ -22,6 +22,7 @@ import AgendaItem from "../mocks/AgendaItem";
 import { getTheme, themeColor, lightThemeColor } from "../mocks/theme";
 import CreateEventModal from "../components/CreateEventModal";
 import { API_URL } from "../config/api";
+const TOKEN = "authToken";
 
 const leftArrowIcon = require("../img/previous.png");
 const rightArrowIcon = require("../img/next.png");
@@ -45,11 +46,11 @@ const ExpandableCalendarScreen = ({ weekView }) => {
   const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
-      const token = await AsyncStorage.getItem("token");
+      const token = await AsyncStorage.getItem(TOKEN);
 
       if (!token) {
-        Alert.alert("Error", "Please login to view events");
         setLoading(false);
+        setAgendaItems([]);
         return;
       }
 
@@ -61,20 +62,23 @@ const ExpandableCalendarScreen = ({ weekView }) => {
         },
       });
 
+      if (!response.ok) {
+        console.error("Response not OK:", response.status);
+        setLoading(false);
+        return;
+      }
+
       const data = await response.json();
 
       if (data.success) {
         setEvents(data.events);
         formatEventsForCalendar(data.events);
       } else {
-        Alert.alert("Error", data.message || "Failed to fetch events");
+        console.error("Fetch failed:", data.message);
       }
     } catch (error) {
       console.error("Error fetching events:", error);
-      Alert.alert(
-        "Error",
-        "Failed to fetch events. Please check your connection."
-      );
+      setAgendaItems([]);
     } finally {
       setLoading(false);
     }
@@ -133,7 +137,12 @@ const ExpandableCalendarScreen = ({ weekView }) => {
 
   const handleCreateEvent = async (eventData) => {
     try {
-      const token = await AsyncStorage.getItem("token");
+      const token = await AsyncStorage.getItem(TOKEN);
+
+      if (!token) {
+        Alert.alert("Error", "Please login to create events");
+        return;
+      }
 
       const response = await fetch(`${API_URL}/user/events`, {
         method: "POST",
@@ -143,6 +152,13 @@ const ExpandableCalendarScreen = ({ weekView }) => {
         },
         body: JSON.stringify(eventData),
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Create event error:", errorText);
+        Alert.alert("Error", "Failed to create event. Please try again.");
+        return;
+      }
 
       const data = await response.json();
 
@@ -154,14 +170,19 @@ const ExpandableCalendarScreen = ({ weekView }) => {
       }
     } catch (error) {
       console.error("Error creating event:", error);
-      Alert.alert("Error", "Failed to create event");
+      Alert.alert("Error", "Failed to create event. Check your connection.");
     }
   };
 
   const handleUpdateEvent = async (eventData) => {
     try {
-      const token = await AsyncStorage.getItem("token");
+      const token = await AsyncStorage.getItem(TOKEN);
       const eventId = eventData.id;
+
+      if (!token) {
+        Alert.alert("Error", "Please login to update events");
+        return;
+      }
 
       const response = await fetch(`${API_URL}/user/events/${eventId}`, {
         method: "PUT",
@@ -171,6 +192,13 @@ const ExpandableCalendarScreen = ({ weekView }) => {
         },
         body: JSON.stringify(eventData),
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Update event error:", errorText);
+        Alert.alert("Error", "Failed to update event. Please try again.");
+        return;
+      }
 
       const data = await response.json();
 
@@ -188,8 +216,13 @@ const ExpandableCalendarScreen = ({ weekView }) => {
 
   const handleDeleteEvent = async (event) => {
     try {
-      const token = await AsyncStorage.getItem("token");
+      const token = await AsyncStorage.getItem(TOKEN);
       const eventId = event._id;
+
+      if (!token) {
+        Alert.alert("Error", "Please login to delete events");
+        return;
+      }
 
       const response = await fetch(`${API_URL}/user/events/${eventId}`, {
         method: "DELETE",
@@ -198,6 +231,13 @@ const ExpandableCalendarScreen = ({ weekView }) => {
           "Content-Type": "application/json",
         },
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Delete event error:", errorText);
+        Alert.alert("Error", "Failed to delete event. Please try again.");
+        return;
+      }
 
       const data = await response.json();
 
@@ -381,7 +421,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#6366f1",
+    backgroundColor: "#7284BE",
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,

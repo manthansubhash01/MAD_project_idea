@@ -65,7 +65,7 @@ const AgendaItem = ({ item, onEdit, onDelete }) => {
       <Text style={styles.itemTitleText}>{item.title}</Text>
 
       <View style={styles.itemButtonContainer}>
-        <Button color="#6366f1" title="Options" onPress={buttonPressed} />
+        <Button color="#7284BE" title="Options" onPress={buttonPressed} />
       </View>
     </TouchableOpacity>
   );
