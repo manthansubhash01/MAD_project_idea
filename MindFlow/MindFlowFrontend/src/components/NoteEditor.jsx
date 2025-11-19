@@ -64,7 +64,6 @@ const NoteEditor = ({ note, onSave }) => {
     try {
       const content = await editor.getHTML();
       const token = await AsyncStorage.getItem(TOKEN);
-      console.log(token);
 
       if (!token) {
         Alert.alert(
@@ -87,17 +86,12 @@ const NoteEditor = ({ note, onSave }) => {
         }),
       });
 
-      console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
-
       const responseText = await response.text();
-      console.log("Response body:", responseText);
 
       let data;
       try {
         data = JSON.parse(responseText);
       } catch (parseError) {
-        console.error("JSON parse error. Response was:", responseText);
         throw new Error(
           "Server returned invalid response. Please check if the backend is running."
         );
@@ -113,7 +107,6 @@ const NoteEditor = ({ note, onSave }) => {
       }
       Alert.alert("Success", "Note saved successfully");
     } catch (error) {
-      console.error("Save error:", error);
       Alert.alert("Error", error.message || "Failed to save note");
     } finally {
       setIsSaving(false);
