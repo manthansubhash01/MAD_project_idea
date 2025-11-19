@@ -54,7 +54,7 @@ const FolderListScreen = ({ navigation }) => {
     }
 
       const handleSubmit = () => {
-        console.log(folderName)
+        // console.log(folderName)
         if(folderName != ''){
             createFolder(folderName,description)
             setModalVisible(false)

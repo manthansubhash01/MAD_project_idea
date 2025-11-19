@@ -1,64 +1,254 @@
-import React from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-import { RichText, Toolbar, useEditorBridge,DEFAULT_TOOLBAR_ITEMS } from '@10play/tentap-editor';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableOpacity,
+  Text,
+  Alert,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
+import { RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "../config/api";
 
-const NoteEditor = () => {
+const TOKEN = "authToken";
+
+const NoteEditor = ({ note, onSave }) => {
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
+
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
+    initialContent: note?.content || "",
   });
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      (e) => {
+        const screenHeight = Dimensions.get("window").height;
+        const keyboardTop = e.endCoordinates.screenY;
+        const actualKeyboardHeight = screenHeight - keyboardTop;
+        // console.log("Screen height:", screenHeight);
+        // console.log("Keyboard top:", keyboardTop);
+        // console.log("Actual keyboard height:", actualKeyboardHeight);
+        setKeyboardHeight(actualKeyboardHeight);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const saveNote = async () => {
+    if (!note?._id) {
+      Alert.alert("Error", "Note ID is missing");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const content = await editor.getHTML();
+      const token = await AsyncStorage.getItem(TOKEN);
+      console.log(token);
+
+      if (!token) {
+        Alert.alert(
+          "Error",
+          "Authentication token not found. Please login again."
+        );
+        setIsSaving(false);
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/user/notes/${note._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          content,
+          title: note.title,
+        }),
+      });
+
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
+
+      const responseText = await response.text();
+      console.log("Response body:", responseText);
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("JSON parse error. Response was:", responseText);
+        throw new Error(
+          "Server returned invalid response. Please check if the backend is running."
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(data.Error || data.error || "Failed to save note");
+      }
+
+      setLastSaved(new Date());
+      if (onSave) {
+        onSave({ ...note, content });
+      }
+      Alert.alert("Success", "Note saved successfully");
+    } catch (error) {
+      console.error("Save error:", error);
+      Alert.alert("Error", error.message || "Failed to save note");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <RichText editor={editor} />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{
-          position: 'absolute',
-          width: '100%',
-          bottom: 0,
-        }}
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
       >
-        <Toolbar editor={editor} />
+        <View style={styles.editorContainer}>
+          <RichText editor={editor} style={styles.richText} />
+        </View>
       </KeyboardAvoidingView>
-    </View>
 
+      <View
+        style={[
+          styles.toolbarContainer,
+          keyboardHeight > 0 && {
+            transform: [{ translateY: -keyboardHeight }],
+          },
+        ]}
+      >
+        <Toolbar editor={editor} style={styles.toolbar} />
+
+        <TouchableOpacity
+          style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
+          onPress={saveNote}
+          disabled={isSaving}
+        >
+          {isSaving ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.saveButtonText}>Save</Text>
+          )}
+        </TouchableOpacity>
+      </View>
+
+      {lastSaved && (
+        <View style={styles.savedIndicator}>
+          <Text style={styles.savedText}>
+            Last saved: {lastSaved.toLocaleTimeString()}
+          </Text>
+        </View>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    position: 'relative',
+    backgroundColor: "#f8f9fa",
+  },
+  flex: {
+    flex: 1,
   },
   editorContainer: {
     flex: 1,
+    backgroundColor: "#ffffff",
     paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 16,
+    marginHorizontal: 8,
+    marginTop: 8,
+    marginBottom: 8,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  toolbarWrapper: {
-    position: 'absolute',
+  richText: {
+    flex: 1,
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#333",
+  },
+  toolbarContainer: {
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    height: 60,
-    backgroundColor: '#fafafa',
-    borderTopWidth: 0.5,
-    borderTopColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 999,
-    elevation: 10,
+    backgroundColor: "#ffffff",
+    borderTopWidth: 1,
+    borderTopColor: "#e0e0e0",
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
   },
   toolbar: {
     flex: 1,
-    zIndex: 1100,
-    backgroundColor: '#fafafa',
-    width: '100%', 
+    backgroundColor: "transparent",
   },
-  editor: {
-    flex: 1,
+  saveButton: {
+    backgroundColor: "#4a90e2",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginLeft: 8,
+    minWidth: 80,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  saveButtonDisabled: {
+    backgroundColor: "#a0c4e8",
+  },
+  saveButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  savedIndicator: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "rgba(76, 175, 80, 0.9)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  savedText: {
+    color: "#ffffff",
+    fontSize: 12,
+    fontWeight: "500",
   },
 });
 

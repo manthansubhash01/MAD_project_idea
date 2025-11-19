@@ -81,7 +81,7 @@ const PendingTodoScreen = () => {
                 body : JSON.stringify({...todos[index],isCompleted : true})
             })
             const result = await res.json()
-            console.log(result)
+            // console.log(result)
             setTodos((prev) =>
                 prev.filter((task, i) => i !== index)
             );
@@ -103,7 +103,7 @@ const PendingTodoScreen = () => {
             });
 
             const result = await res.json();
-            console.log("Deleted:", result);
+            // console.log("Deleted:", result);
 
             setTodos((prev) => prev.filter((_, i) => i !== index));
         } catch (err) {

@@ -28,7 +28,7 @@ const CompletedTodoScreen = () => {
       const result = await data.json();
       setTotal(result.length);
       setTodos(result.filter((ele) => ele.isCompleted));
-      console.log(result);
+      // console.log(result);
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +50,7 @@ const CompletedTodoScreen = () => {
       });
 
       const result = await res.json();
-      console.log("Deleted:", result);
+      // console.log("Deleted:", result);
 
       setTodos((prev) => prev.filter((_, i) => i !== index));
     } catch (err) {

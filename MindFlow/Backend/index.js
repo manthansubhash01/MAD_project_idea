@@ -21,6 +21,7 @@ app.use("/auth", authRoutes);
 app.use("/user", profileRoutes);
 app.use("/user", folderRoutes);
 app.use("/user/folders/:folderId", noteRoutes);
+app.use("/user/notes", noteRoutes);
 app.use("/user/tasks", taskRoutes);
 app.use("/user/events", eventRoutes);
 

@@ -8,62 +8,84 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const TOKEN = 'authToken'
-const USER  = 'User'
-const LAST_LOGIN = 'lastLogin'
-const LoginScreen = ({navigation}) => {
+const TOKEN = "authToken";
+const USER = "User";
+const LAST_LOGIN = "lastLogin";
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    const loadData = async() => {
-      try{
-        const data = await AsyncStorage.getItem(USER)
-        const user = JSON.parse(data)
-        if(user){
-          setEmail(user.email)
-          setPassword(user.password)
-          const res = await fetch('https://mad-project-idea.onrender.com/auth/login',{
-            method : 'POST',
-            headers : { "Content-Type": "application/json" },
-            body : JSON.stringify({email, password})
-          })
-          const result = await res.json()
-          console.log(result)
-          await AsyncStorage.setItem(TOKEN, result.token)
-          await AsyncStorage.setItem(LAST_LOGIN, new Date().toDateString())
-          
-          navigation.replace("Dashboard");
+    const loadData = async () => {
+      try {
+        const data = await AsyncStorage.getItem(USER);
+        const user = JSON.parse(data);
+        if (user) {
+          setEmail(user.email);
+          setPassword(user.password);
+          const res = await fetch(
+            "https://mad-project-idea.onrender.com/auth/login",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: user.email,
+                password: user.password,
+              }),
+            }
+          );
+          const result = await res.json();
+          console.log(result);
+
+          if (res.ok && result.token) {
+            await AsyncStorage.setItem(TOKEN, result.token);
+            await AsyncStorage.setItem(LAST_LOGIN, new Date().toDateString());
+            navigation.replace("Dashboard");
+          } else {
+            await AsyncStorage.removeItem(USER);
+          }
         }
-      }catch(err){
-
+      } catch (err) {
+        console.log("Auto-login error:", err);
       }
-    }
-    loadData()
-
-  },[])
+    };
+    loadData();
+  }, []);
 
   const handleLogin = async () => {
-    try{
-        const res = await fetch('https://mad-project-idea.onrender.com/auth/login',{
-            method : 'POST',
-            headers : { "Content-Type": "application/json" },
-            body : JSON.stringify({email, password})
-        })
-        const data = await res.json()
-        console.log(data)
-        await AsyncStorage.setItem(TOKEN, data.token)
-        await AsyncStorage.setItem(USER, JSON.stringify({email , password}))
-        await AsyncStorage.setItem(LAST_LOGIN, new Date().toDateString())
-        
+    try {
+      const res = await fetch(
+        "https://mad-project-idea.onrender.com/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+
+      if (!res.ok) {
+        alert(data.error || "Login failed. Please check your credentials.");
+        return;
+      }
+
+      if (data.token) {
+        await AsyncStorage.setItem(TOKEN, data.token);
+        await AsyncStorage.setItem(USER, JSON.stringify({ email, password }));
+        await AsyncStorage.setItem(LAST_LOGIN, new Date().toDateString());
         navigation.replace("Dashboard");
-    }catch(err){
-        console.log(err)
+      } else {
+        alert("Login failed. No token received.");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Network error. Please check your connection.");
     }
-  }
+  };
 
   return (
-     <View className="flex-1 bg-white px-6 justify-center">
+    <View className="flex-1 bg-white px-6 justify-center">
       <Text className="text-3xl font-bold text-jet text-center mb-2">
         Welcome Back
       </Text>
@@ -109,7 +131,5 @@ const LoginScreen = ({navigation}) => {
     </View>
   );
 };
-
-
 
 export default LoginScreen;

@@ -15,13 +15,13 @@ const NotesListScreen = ({navigation,route}) => {
   const loadNotes = async() => {
     try{
         const token = await AsyncStorage.getItem(TOKEN)
-        console.log(token)
+        // console.log(token)
         const data = await fetch(`https://mad-project-idea.onrender.com/user/folders/${folder._id}/note`,{
             headers: { "Authorization": `Bearer ${token}` }
         })
         const result = await data.json()
         setNotes(result)
-        console.log(result)
+        // console.log(result)
     }catch(err){
         console.log(err)
     }

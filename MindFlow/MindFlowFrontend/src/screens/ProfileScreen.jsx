@@ -37,7 +37,7 @@ export default function ProfileScreen({ navigation }) {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       setUser(data);
     } catch (err) {
       console.error("Error fetching profile:", err);
@@ -111,7 +111,7 @@ export default function ProfileScreen({ navigation }) {
   };
 
   const handleSubmit = () => {
-    console.log(folderName);
+    // console.log(folderName);
     if (folderName != "") {
       handleChangePassword();
       setModalVisible(false);
