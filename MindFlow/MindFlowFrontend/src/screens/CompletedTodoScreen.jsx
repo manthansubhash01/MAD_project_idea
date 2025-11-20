@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
-import { TodoContext } from '../contexts/TodoContext';
+import { TodoContext } from "../contexts/TodoContext";
 
 const API_URL = "https://mad-project-idea.onrender.com/user/tasks";
 const TOKEN = "authToken";
@@ -59,7 +59,7 @@ const CompletedTodoScreen = () => {
   }
 
   return (
-    <View>
+    <View className="flex-1">
       <View className="bg-jet flex flex-row m-5 rounded-3xl p-10 justify-evenly items-center">
         <View>
           <Text className="text-white text-3xl font-bold">Todo Done</Text>
@@ -72,7 +72,11 @@ const CompletedTodoScreen = () => {
         </View>
       </View>
 
-      <ScrollView style={styles.scrollContainer}>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
+      >
         {todos.map((ele, index) => {
           return (
             <View
@@ -80,23 +84,21 @@ const CompletedTodoScreen = () => {
               className="flex-row justify-between items-center bg-white rounded-2xl p-4 my-2 shadow-md"
             >
               <View className="flex-1">
-                  <Text className="text-jet text-lg font-bold">{ele.title}</Text>
-                  {/* <Text className="text-jet text-sm mt-1">{ele.description}</Text> */}
-                  {
-                      ele.priority === "high" ? (
-                          <View className = "bg-highBg w-20 items-center rounded-xl">
-                              <Text className = "text-highText">Urgent</Text>
-                          </View>
-                      ) : ele.priority === "medium" ? (
-                          <View className = "bg-mediumBg w-20 items-center rounded-xl">
-                              <Text className = "text-mediumText">Important</Text>
-                          </View>
-                      ) : (
-                          <View className = "bg-lowBg w-20 items-center rounded-xl">
-                              <Text className = "text-lowText">Minor</Text>
-                          </View>
-                      )
-                  }
+                <Text className="text-jet text-lg font-bold">{ele.title}</Text>
+                {/* <Text className="text-jet text-sm mt-1">{ele.description}</Text> */}
+                {ele.priority === "high" ? (
+                  <View className="bg-highBg w-20 items-center rounded-xl">
+                    <Text className="text-highText">Urgent</Text>
+                  </View>
+                ) : ele.priority === "medium" ? (
+                  <View className="bg-mediumBg w-20 items-center rounded-xl">
+                    <Text className="text-mediumText">Important</Text>
+                  </View>
+                ) : (
+                  <View className="bg-lowBg w-20 items-center rounded-xl">
+                    <Text className="text-lowText">Minor</Text>
+                  </View>
+                )}
               </View>
 
               <View className="flex-row space-x-2 ml-4">
@@ -116,9 +118,6 @@ const CompletedTodoScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    padding: 15,
-  },
   taskContainer: {
     flex: 1,
     flexDirection: "row",

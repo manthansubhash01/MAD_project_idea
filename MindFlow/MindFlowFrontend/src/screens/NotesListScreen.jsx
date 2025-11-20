@@ -130,8 +130,9 @@ const NotesListScreen = ({ navigation, route }) => {
         }
         numColumns={2}
         columnWrapperClassName="justify-between"
-        contentContainerStyle={{ paddingVertical: 10 }}
+        contentContainerStyle={{ paddingVertical: 10, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
+        className="flex-1"
       />
 
       <CreateNote

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -16,19 +16,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "../config/api";
 
 const TOKEN = "authToken";
+const AUTOSAVE_DELAY = 3000;
 
 const NoteEditor = ({ note, onSave }) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [initialContent, setInitialContent] = useState("");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const autoSaveTimerRef = useRef(null);
+  const editorContentRef = useRef("");
 
-  const editor = useEditorBridge({
-    autofocus: true,
-    avoidIosKeyboard: true,
-    initialContent: "",
-  });
-
+  // Load note content from server first
   useEffect(() => {
     const loadNoteContent = async () => {
       if (note?._id && note?.folderId) {
@@ -45,12 +45,15 @@ const NoteEditor = ({ note, onSave }) => {
 
           if (response.ok) {
             const data = await response.json();
-            editor.setContent(data.content || "");
+            console.log("Loaded note data:", data);
+            setInitialContent(data.content || "");
           } else {
-            editor.setContent(note?.content || "");
+            console.log("Failed to load note, using fallback");
+            setInitialContent(note?.content || "");
           }
         } catch (error) {
-          editor.setContent(note?.content || "");
+          console.log("Error loading note:", error);
+          setInitialContent(note?.content || "");
         } finally {
           setIsLoading(false);
         }
@@ -60,7 +63,13 @@ const NoteEditor = ({ note, onSave }) => {
     };
 
     loadNoteContent();
-  }, [note?._id]);
+  }, [note?._id, note?.folderId]);
+
+  const editor = useEditorBridge({
+    autofocus: true,
+    avoidIosKeyboard: true,
+    initialContent: initialContent,
+  });
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -69,9 +78,6 @@ const NoteEditor = ({ note, onSave }) => {
         const screenHeight = Dimensions.get("window").height;
         const keyboardTop = e.endCoordinates.screenY;
         const actualKeyboardHeight = screenHeight - keyboardTop;
-        // console.log("Screen height:", screenHeight);
-        // console.log("Keyboard top:", keyboardTop);
-        // console.log("Actual keyboard height:", actualKeyboardHeight);
         setKeyboardHeight(actualKeyboardHeight);
       }
     );
@@ -88,7 +94,49 @@ const NoteEditor = ({ note, onSave }) => {
     };
   }, []);
 
-  const saveNote = async () => {
+  const triggerAutoSave = () => {
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+    }
+
+    autoSaveTimerRef.current = setTimeout(() => {
+      if (hasUnsavedChanges) {
+        saveNote(true);
+      }
+    }, AUTOSAVE_DELAY);
+  };
+
+  useEffect(() => {
+    if (isLoading || !editor) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const currentContent = await editor.getHTML();
+        if (currentContent !== editorContentRef.current) {
+          editorContentRef.current = currentContent;
+          setHasUnsavedChanges(true);
+          triggerAutoSave();
+        }
+      } catch (error) {}
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [editor, isLoading]);
+
+  useEffect(() => {
+    return () => {
+      if (hasUnsavedChanges && autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [hasUnsavedChanges]);
+
+  const saveNote = async (isAutoSave = false) => {
     if (!note?._id) {
       Alert.alert("Error", "Note ID is missing");
       return;
@@ -139,12 +187,22 @@ const NoteEditor = ({ note, onSave }) => {
       }
 
       setLastSaved(new Date());
+      setHasUnsavedChanges(false);
       if (onSave) {
         onSave({ ...note, content });
       }
-      Alert.alert("Success", "Note saved successfully");
+
+      if (!isAutoSave) {
+        Alert.alert("Success", "Note saved successfully");
+      } else {
+        console.log("Auto-saved at", new Date().toLocaleTimeString());
+      }
     } catch (error) {
-      Alert.alert("Error", error.message || "Failed to save note");
+      if (!isAutoSave) {
+        Alert.alert("Error", error.message || "Failed to save note");
+      } else {
+        console.log("Auto-save failed:", error.message);
+      }
     } finally {
       setIsSaving(false);
     }
@@ -179,9 +237,9 @@ const NoteEditor = ({ note, onSave }) => {
           >
             <Toolbar editor={editor} style={styles.toolbar} />
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
-              onPress={saveNote}
+              onPress={() => saveNote(false)}
               disabled={isSaving}
             >
               {isSaving ? (
@@ -189,16 +247,8 @@ const NoteEditor = ({ note, onSave }) => {
               ) : (
                 <Text style={styles.saveButtonText}>Save</Text>
               )}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-
-          {lastSaved && (
-            <View style={styles.savedIndicator}>
-              <Text style={styles.savedText}>
-                Last saved: {lastSaved.toLocaleTimeString()}
-              </Text>
-            </View>
-          )}
         </>
       )}
     </View>
@@ -285,20 +335,6 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
-  },
-  savedIndicator: {
-    position: "absolute",
-    top: 8,
-    right: 8,
-    backgroundColor: "rgba(76, 175, 80, 0.9)",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-  savedText: {
-    color: "#ffffff",
-    fontSize: 12,
-    fontWeight: "500",
   },
 });
 
