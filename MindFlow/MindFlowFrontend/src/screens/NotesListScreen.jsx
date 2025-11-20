@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateNote from "../components/CreateNotes";
 
@@ -20,44 +21,61 @@ const NotesListScreen = ({ navigation, route }) => {
   const loadNotes = async () => {
     try {
       const token = await AsyncStorage.getItem(TOKEN);
-      // console.log(token)
-      const data = await fetch(
-        `https://mad-project-idea.onrender.com/user/folders/${folder._id}`,
+      console.log("Loading notes for folder:", folder._id);
+
+      const response = await fetch(
+        `https://mad-project-idea.onrender.com/user/folders/${folder._id}/notes`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      const result = await data.json();
-      setNotes(result);
-      // console.log(result)
+
+      console.log("Response status:", response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+        setNotes([]);
+        return;
+      }
+
+      const result = await response.json();
+      console.log("Notes received:", JSON.stringify(result, null, 2));
+      console.log("Number of notes:", result?.length || 0);
+
+      setNotes(Array.isArray(result) ? result : []);
     } catch (err) {
-      console.log(err);
+      console.log("Error loading notes:", err.message);
+      setNotes([]);
     }
   };
 
-  useEffect(() => {
-    loadNotes();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadNotes();
+    }, [folder._id])
+  );
 
   const createNote = async (title) => {
     try {
       const token = await AsyncStorage.getItem(TOKEN);
       const res = await fetch(
-        `https://mad-project-idea.onrender.com/user/folders/${folder._id}`,
+        `https://mad-project-idea.onrender.com/user/folders/${folder._id}/notes`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ title, folderId: folder._id }),
+          body: JSON.stringify({ title }),
         }
       );
 
       const newNote = await res.json();
-      // console.log(newNote)
 
-      setNotes((prev) => [...prev, newNote]);
+      if (newNote && newNote._id) {
+        setNotes((prev) => [...(Array.isArray(prev) ? prev : []), newNote]);
+      }
     } catch (err) {
       console.log(err);
     }

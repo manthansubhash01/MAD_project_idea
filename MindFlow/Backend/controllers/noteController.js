@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 
 const createNote = async (req, res) => {
   try {
-    let { title, folderId } = req.body;
+    let { title } = req.body;
+    const folderId = req.params.folderId; // Get from route params
     const userId = req.user.id;
 
     if (!title) title = "Untitled";
@@ -45,13 +46,18 @@ const getNotes = async (req, res) => {
 const getNotesByID = async (req, res) => {
   try {
     const noteId = req.params.id?.trim();
+    const folderId = req.params.folderId;
     const userId = req.user.id;
 
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
       return res.status(400).json({ Error: "Invalid noteId" });
     }
 
-    const note = await Note.findById(req.params.id);
+    const note = await Note.findOne({
+      _id: noteId,
+      folderId: folderId,
+      userId: userId,
+    });
 
     if (!note) {
       return res
@@ -68,6 +74,7 @@ const getNotesByID = async (req, res) => {
 const updateNote = async (req, res) => {
   try {
     const noteId = req.params.id?.trim();
+    const folderId = req.params.folderId;
     const userId = req.user.id;
     const { blocks, content, title } = req.body;
 
@@ -82,7 +89,7 @@ const updateNote = async (req, res) => {
     if (title !== undefined) updateData.title = title;
 
     const note = await Note.findOneAndUpdate(
-      { _id: noteId, userId: userId },
+      { _id: noteId, folderId: folderId, userId: userId },
       updateData,
       { new: true, runValidators: true }
     );
@@ -102,7 +109,16 @@ const updateNote = async (req, res) => {
 
 const editNoteNyId = async (req, res) => {
   try {
-    const note = await Note.findById(req.params.id);
+    const noteId = req.params.id;
+    const folderId = req.params.folderId;
+    const userId = req.user.id;
+
+    const note = await Note.findOne({
+      _id: noteId,
+      folderId: folderId,
+      userId: userId,
+    });
+
     if (!note) return res.status(404).json({ error: "Not found" });
 
     const { action } = req.body;

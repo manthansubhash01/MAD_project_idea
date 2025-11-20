@@ -21,12 +21,46 @@ const NoteEditor = ({ note, onSave }) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
-    initialContent: note?.content || "",
+    initialContent: "",
   });
+
+  useEffect(() => {
+    const loadNoteContent = async () => {
+      if (note?._id && note?.folderId) {
+        try {
+          const token = await AsyncStorage.getItem(TOKEN);
+          const response = await fetch(
+            `${API_URL}/user/folders/${note.folderId}/notes/${note._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            editor.setContent(data.content || "");
+          } else {
+            editor.setContent(note?.content || "");
+          }
+        } catch (error) {
+          editor.setContent(note?.content || "");
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    loadNoteContent();
+  }, [note?._id]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -74,17 +108,20 @@ const NoteEditor = ({ note, onSave }) => {
         return;
       }
 
-      const response = await fetch(`${API_URL}/user/notes/${note._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          content,
-          title: note.title,
-        }),
-      });
+      const response = await fetch(
+        `${API_URL}/user/folders/${note.folderId}/notes/${note._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            content,
+            title: note.title,
+          }),
+        }
+      );
 
       const responseText = await response.text();
 
@@ -115,45 +152,54 @@ const NoteEditor = ({ note, onSave }) => {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-      >
-        <View style={styles.editorContainer}>
-          <RichText editor={editor} style={styles.richText} />
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4a90e2" />
+          <Text style={styles.loadingText}>Loading note...</Text>
         </View>
-      </KeyboardAvoidingView>
+      ) : (
+        <>
+          <KeyboardAvoidingView
+            style={styles.flex}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+          >
+            <View style={styles.editorContainer}>
+              <RichText editor={editor} style={styles.richText} />
+            </View>
+          </KeyboardAvoidingView>
 
-      <View
-        style={[
-          styles.toolbarContainer,
-          keyboardHeight > 0 && {
-            transform: [{ translateY: -keyboardHeight }],
-          },
-        ]}
-      >
-        <Toolbar editor={editor} style={styles.toolbar} />
+          <View
+            style={[
+              styles.toolbarContainer,
+              keyboardHeight > 0 && {
+                transform: [{ translateY: -keyboardHeight }],
+              },
+            ]}
+          >
+            <Toolbar editor={editor} style={styles.toolbar} />
 
-        <TouchableOpacity
-          style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
-          onPress={saveNote}
-          disabled={isSaving}
-        >
-          {isSaving ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.saveButtonText}>Save</Text>
+            <TouchableOpacity
+              style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
+              onPress={saveNote}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.saveButtonText}>Save</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {lastSaved && (
+            <View style={styles.savedIndicator}>
+              <Text style={styles.savedText}>
+                Last saved: {lastSaved.toLocaleTimeString()}
+              </Text>
+            </View>
           )}
-        </TouchableOpacity>
-      </View>
-
-      {lastSaved && (
-        <View style={styles.savedIndicator}>
-          <Text style={styles.savedText}>
-            Last saved: {lastSaved.toLocaleTimeString()}
-          </Text>
-        </View>
+        </>
       )}
     </View>
   );
@@ -163,6 +209,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f9fa",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#666",
   },
   flex: {
     flex: 1,

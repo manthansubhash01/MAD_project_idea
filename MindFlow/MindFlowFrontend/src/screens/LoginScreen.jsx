@@ -19,6 +19,8 @@ const LoginScreen = ({ navigation }) => {
     const loadData = async () => {
       try {
         const data = await AsyncStorage.getItem(USER);
+        if (!data) return;
+
         const user = JSON.parse(data);
         if (user) {
           setEmail(user.email);
@@ -34,10 +36,21 @@ const LoginScreen = ({ navigation }) => {
               }),
             }
           );
-          const result = await res.json();
-          console.log(result);
 
-          if (res.ok && result.token) {
+          if (!res.ok) {
+            await AsyncStorage.removeItem(USER);
+            return;
+          }
+
+          const responseText = await res.text();
+          if (!responseText) {
+            await AsyncStorage.removeItem(USER);
+            return;
+          }
+
+          const result = JSON.parse(responseText);
+
+          if (result.token) {
             await AsyncStorage.setItem(TOKEN, result.token);
             await AsyncStorage.setItem(LAST_LOGIN, new Date().toDateString());
             navigation.replace("Dashboard");
@@ -47,6 +60,7 @@ const LoginScreen = ({ navigation }) => {
         }
       } catch (err) {
         console.log("Auto-login error:", err);
+        await AsyncStorage.removeItem(USER);
       }
     };
     loadData();

@@ -71,7 +71,7 @@ const SignupScreen = ({ navigation }) => {
       <Text className="text-center text-french-gray text-sm">
         Already have an account?{" "}
         <Text
-          className="text-golden-gate-bridge font-semibold"
+          className="text-powderBlue font-semibold"
           onPress={() => navigation.replace("Login")}
         >
           Log in
