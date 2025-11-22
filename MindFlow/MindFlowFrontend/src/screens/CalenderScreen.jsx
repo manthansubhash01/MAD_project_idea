@@ -16,6 +16,7 @@ import {
   WeekCalendar,
 } from "react-native-calendars";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
 
 import testIDs from "../testID.js";
 import AgendaItem from "../mocks/AgendaItem";
@@ -366,7 +367,7 @@ const ExpandableCalendarScreen = ({ weekView }) => {
           setModalVisible(true);
         }}
       >
-        <Text style={styles.fabIcon}>+</Text>
+        <Ionicons name="add" size={40} color="white" />
       </TouchableOpacity>
 
       <CreateEventModal
@@ -421,7 +422,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#7284BE",
+    backgroundColor: "#71A5E9",
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,

@@ -59,61 +59,81 @@ const CompletedTodoScreen = () => {
   }
 
   return (
-    <View className="flex-1">
-      <View className="bg-jet flex flex-row m-5 rounded-3xl p-10 justify-evenly items-center">
-        <View>
-          <Text className="text-white text-3xl font-bold">Todo Done</Text>
-          <Text className="text-gray-200 text-lg">Keep it up</Text>
-        </View>
-        <View className="bg-powderBlue flex flex-row m-5 w-32 h-32 rounded-full justify-center items-center">
-          <Text className="text-white text-5xl font-bold">{todos.length}</Text>
-          <Text className="text-white text-5xl font-bold">/</Text>
-          <Text className="text-white text-5xl font-bold">{total}</Text>
+    <ScrollView
+      className="flex-1 bg-azure"
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ paddingBottom: 20 }}
+    >
+      {/* Header Section */}
+      <View className="bg-powderBlue pt-12 pb-6 px-6 rounded-b-3xl mb-6">
+        <View className="flex-row justify-between items-center">
+          <View className="flex-1">
+            <Text className="text-3xl font-bold text-white mb-1">
+              Completed
+            </Text>
+            <Text className="text-white/80 text-sm">
+              Keep up the great work!
+            </Text>
+          </View>
+          <View className="bg-white h-20 w-20 rounded-2xl items-center justify-center">
+            <Text className="text-powderBlue text-3xl font-bold">
+              {todos.length}
+            </Text>
+            <Text className="text-french-gray text-xs">of {total}</Text>
+          </View>
         </View>
       </View>
 
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
-      >
+      <View className="px-4">
         {todos.map((ele, index) => {
           return (
             <View
               key={index}
-              className="flex-row justify-between items-center bg-white rounded-2xl p-4 my-2 shadow-md"
+              className="bg-white rounded-2xl p-4 mb-3 shadow-md"
             >
-              <View className="flex-1">
-                <Text className="text-jet text-lg font-bold">{ele.title}</Text>
-                {/* <Text className="text-jet text-sm mt-1">{ele.description}</Text> */}
-                {ele.priority === "high" ? (
-                  <View className="bg-highBg w-20 items-center rounded-xl">
-                    <Text className="text-highText">Urgent</Text>
+              <View className="flex-row justify-between items-start">
+                <View className="flex-1 mr-3">
+                  <View className="flex-row items-center mb-2">
+                    <View className="bg-azure h-6 w-6 rounded-full items-center justify-center mr-2">
+                      <Ionicons name="checkmark" size={16} color="#7284BE" />
+                    </View>
+                    <Text className="text-jet text-lg font-bold flex-1">
+                      {ele.title}
+                    </Text>
                   </View>
-                ) : ele.priority === "medium" ? (
-                  <View className="bg-mediumBg w-20 items-center rounded-xl">
-                    <Text className="text-mediumText">Important</Text>
-                  </View>
-                ) : (
-                  <View className="bg-lowBg w-20 items-center rounded-xl">
-                    <Text className="text-lowText">Minor</Text>
-                  </View>
-                )}
-              </View>
+                  {ele.priority === "high" ? (
+                    <View className="bg-highBg px-3 py-1 rounded-full self-start">
+                      <Text className="text-highText text-xs font-semibold">
+                        🔴 Urgent
+                      </Text>
+                    </View>
+                  ) : ele.priority === "medium" ? (
+                    <View className="bg-mediumBg px-3 py-1 rounded-full self-start">
+                      <Text className="text-mediumText text-xs font-semibold">
+                        🟡 Important
+                      </Text>
+                    </View>
+                  ) : (
+                    <View className="bg-lowBg px-3 py-1 rounded-full self-start">
+                      <Text className="text-lowText text-xs font-semibold">
+                        🟢 Minor
+                      </Text>
+                    </View>
+                  )}
+                </View>
 
-              <View className="flex-row space-x-2 ml-4">
                 <TouchableOpacity
-                  className="m-2 px-3 py-1 rounded-xl justify-center items-center"
+                  className="bg-highBg h-10 w-10 rounded-xl justify-center items-center"
                   onPress={() => handleDelete(index)}
                 >
-                  <MaterialIcons name="delete" size={30} color="#b2b6bfff" />
+                  <MaterialIcons name="delete" size={22} color="#F63737" />
                 </TouchableOpacity>
               </View>
             </View>
           );
         })}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 

@@ -76,40 +76,70 @@ const FolderListScreen = ({ navigation }) => {
   };
 
   return (
-    <View className="flex-1 p-4">
+    <View className="flex-1 bg-azure">
       {notes.length === 0 ? (
         <EmptyNotes onCreate={createFolder} />
       ) : (
         <>
-          <View className="flex-row justify-between items-center mb-2">
-            <Text className="text-lg font-bold text-jet">My Folders</Text>
-            <TouchableOpacity
-              className="bg-powderBlue px-4 py-2 rounded-full"
-              onPress={() => setModalVisible(true)}
-            >
-              <Text className="text-white font-semibold">Create Folder</Text>
-            </TouchableOpacity>
-          </View>
-
           <ScrollView
-            className="flex-1 mt-2"
+            className="flex-1"
             contentContainerStyle={{ paddingBottom: 20 }}
             showsVerticalScrollIndicator={false}
           >
-            {notes.map((ele, idx) => (
-              <TouchableOpacity
-                key={idx}
-                className="bg-white p-5 m-3 rounded-xl border border-gray-200 shadow"
-                onPress={() => navigation.navigate("Folder", { folder: ele })}
-              >
-                <Text className="text-lg font-semibold text-jet">
-                  {ele.name}
-                </Text>
-                {ele.description ? (
-                  <Text className="text-gray-600 mt-1">{ele.description}</Text>
-                ) : null}
-              </TouchableOpacity>
-            ))}
+            {/* Header Section */}
+            <View className="bg-powderBlue pt-12 pb-6 px-6 rounded-b-3xl mb-6">
+              <View className="flex-row justify-between items-center">
+                <View className="flex-1">
+                  <Text className="text-3xl font-bold text-white">
+                    My Folders
+                  </Text>
+                  <Text className="text-white/80 text-sm mt-1">
+                    {notes.length} folder{notes.length !== 1 ? "s" : ""}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  className="bg-white px-5 py-2.5 rounded-full shadow-md"
+                  onPress={() => setModalVisible(true)}
+                >
+                  <Text className="text-powderBlue font-bold text-base">
+                    + New
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Folders Grid */}
+            <View className="px-4">
+              {notes.map((ele, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  className="bg-white p-5 mb-3 rounded-2xl shadow-md flex-row items-center"
+                  onPress={() => navigation.navigate("Folder", { folder: ele })}
+                >
+                  <View className="bg-azure h-14 w-14 rounded-xl items-center justify-center mr-4">
+                    <Text className="text-3xl">📁</Text>
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-lg font-bold text-jet">
+                      {ele.name}
+                    </Text>
+                    {ele.description ? (
+                      <Text
+                        className="text-french-gray text-sm mt-0.5"
+                        numberOfLines={1}
+                      >
+                        {ele.description}
+                      </Text>
+                    ) : (
+                      <Text className="text-french-gray text-sm mt-0.5">
+                        No description
+                      </Text>
+                    )}
+                  </View>
+                  <Text className="text-powderBlue text-2xl">›</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </ScrollView>
 
           <CreateFolder
@@ -141,7 +171,7 @@ const Notes = () => {
       <Stack.Screen
         name="Folder List"
         component={FolderListScreen}
-        options={{ title: "My Folders" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Folder"

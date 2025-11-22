@@ -120,110 +120,156 @@ const PendingTodoScreen = () => {
   }
 
   return (
-    <View className="flex-1 relative">
-      <View className="flex-1">
-        <View className="flex flex-row mb-5">
-          <View className="w-1/2">
-            <View className="bg-highBg h-15 flex-row m-5 mt-5 mb-1 rounded-3xl  justify-start items-center">
-              <View className="bg-highText m-3 mr-1 flex flex-row w-11 h-11 rounded-full justify-center items-center">
-                <Text className="text-white text font-semibold">
+    <View className="flex-1 bg-azure">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        {/* Header Section */}
+        <View className="bg-powderBlue pt-12 pb-6 px-6 rounded-b-3xl mb-4">
+          <Text className="text-3xl font-bold text-white mb-1">My Tasks</Text>
+          <Text className="text-white/80 text-sm">
+            {todos.length} pending task{todos.length !== 1 ? "s" : ""}
+          </Text>
+        </View>
+
+        {/* Priority Stats Cards */}
+        <View className="px-4 mb-4">
+          <View className="bg-white rounded-2xl p-4 shadow-md mb-3">
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center flex-1">
+                <View className="bg-highBg h-14 w-14 rounded-xl items-center justify-center mr-3">
+                  <Text className="text-highText text-2xl font-bold">
+                    {todos.filter((ele) => ele.priority == "high").length}
+                  </Text>
+                </View>
+                <View className="flex-1">
+                  <Text className="text-jet text-lg font-bold">
+                    High Priority
+                  </Text>
+                  <Text className="text-french-gray text-xs">Urgent tasks</Text>
+                </View>
+              </View>
+              <View className="bg-highBg px-3 py-1 rounded-full">
+                <Text className="text-highText text-xs font-semibold">
                   {todos.filter((ele) => ele.priority == "high").length}/
                   {todos.length}
                 </Text>
               </View>
-              <View className="m-3 ml-1">
-                <Text className="text-highText text-xl font-bold">High</Text>
-              </View>
             </View>
-            <View className="bg-mediumBg h-15 flex-row m-5 mt-1 mb-1 rounded-3xl  justify-start items-center">
-              <View className="bg-mediumText m-3 mr-1 flex flex-row w-11 h-11 rounded-full justify-center items-center">
-                <Text className="text-white text font-bold">
+          </View>
+
+          <View className="bg-white rounded-2xl p-4 shadow-md mb-3">
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center flex-1">
+                <View className="bg-mediumBg h-14 w-14 rounded-xl items-center justify-center mr-3">
+                  <Text className="text-mediumText text-2xl font-bold">
+                    {todos.filter((ele) => ele.priority == "medium").length}
+                  </Text>
+                </View>
+                <View className="flex-1">
+                  <Text className="text-jet text-lg font-bold">
+                    Medium Priority
+                  </Text>
+                  <Text className="text-french-gray text-xs">
+                    Important tasks
+                  </Text>
+                </View>
+              </View>
+              <View className="bg-mediumBg px-3 py-1 rounded-full">
+                <Text className="text-mediumText text-xs font-semibold">
                   {todos.filter((ele) => ele.priority == "medium").length}/
                   {todos.length}
                 </Text>
               </View>
-              <View className="m-3 ml-1">
-                <Text className="text-mediumText text-xl font-bold">
-                  Medium
-                </Text>
-              </View>
             </View>
-            <View className="bg-lowBg h-15 flex-row m-5 mt-1 mb-1 rounded-3xl  justify-start items-center">
-              <View className="bg-lowText m-3 mr-1 flex flex-row w-11 h-11 rounded-full justify-center items-center">
-                <Text className="text-white text font-bold">
+          </View>
+
+          <View className="bg-white rounded-2xl p-4 shadow-md">
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center flex-1">
+                <View className="bg-lowBg h-14 w-14 rounded-xl items-center justify-center mr-3">
+                  <Text className="text-lowText text-2xl font-bold">
+                    {todos.filter((ele) => ele.priority == "low").length}
+                  </Text>
+                </View>
+                <View className="flex-1">
+                  <Text className="text-jet text-lg font-bold">
+                    Low Priority
+                  </Text>
+                  <Text className="text-french-gray text-xs">Minor tasks</Text>
+                </View>
+              </View>
+              <View className="bg-lowBg px-3 py-1 rounded-full">
+                <Text className="text-lowText text-xs font-semibold">
                   {todos.filter((ele) => ele.priority == "low").length}/
                   {todos.length}
                 </Text>
               </View>
-              <View className="m-3 ml-1">
-                <Text className="text-lowText text-xl font-bold">Low</Text>
-              </View>
             </View>
-          </View>
-          <View className="">
-            <Image
-              source={require("../../assets/9175151-removebg-preview(1).png")}
-              style={{ width: 150, height: 150 }}
-              className="mt-14 ml-2"
-            />
           </View>
         </View>
 
-        <ScrollView
-          className="pl-3 pr-3"
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 100 }}
-        >
+        {/* Tasks List */}
+        <View className="px-4">
           {todos.map((ele, index) => {
             return (
               <View
                 key={index}
-                className="flex-row justify-between items-center bg-white rounded-2xl p-4 my-2 shadow-md"
+                className="bg-white rounded-2xl p-4 mb-3 shadow-md"
               >
-                <View className="flex-1">
-                  <Text className="text-jet text-lg font-bold">
-                    {ele.title}
-                  </Text>
-                  {/* <Text className="text-jet text-sm mt-1">{ele.description}</Text> */}
-                  {ele.priority === "high" ? (
-                    <View className="bg-highBg w-20 items-center rounded-xl">
-                      <Text className="text-highText">Urgent</Text>
-                    </View>
-                  ) : ele.priority === "medium" ? (
-                    <View className="bg-mediumBg w-20 items-center rounded-xl">
-                      <Text className="text-mediumText">Important</Text>
-                    </View>
-                  ) : (
-                    <View className="bg-lowBg w-20 items-center rounded-xl">
-                      <Text className="text-lowText">Minor</Text>
-                    </View>
-                  )}
-                </View>
+                <View className="flex-row justify-between items-start mb-2">
+                  <View className="flex-1 mr-3">
+                    <Text className="text-jet text-lg font-bold mb-2">
+                      {ele.title}
+                    </Text>
+                    {ele.priority === "high" ? (
+                      <View className="bg-highBg px-3 py-1 rounded-full self-start">
+                        <Text className="text-highText text-xs font-semibold">
+                          🔴 Urgent
+                        </Text>
+                      </View>
+                    ) : ele.priority === "medium" ? (
+                      <View className="bg-mediumBg px-3 py-1 rounded-full self-start">
+                        <Text className="text-mediumText text-xs font-semibold">
+                          🟡 Important
+                        </Text>
+                      </View>
+                    ) : (
+                      <View className="bg-lowBg px-3 py-1 rounded-full self-start">
+                        <Text className="text-lowText text-xs font-semibold">
+                          🟢 Minor
+                        </Text>
+                      </View>
+                    )}
+                  </View>
 
-                <View className="flex-row space-x-2 ml-4">
-                  <TouchableOpacity
-                    className="m-2 px-3 py-1 rounded-xl justify-center items-center"
-                    onPress={() => handleComplete(index)}
-                  >
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={30}
-                      color="#b2b6baff"
-                    />
-                  </TouchableOpacity>
+                  <View className="flex-row">
+                    <TouchableOpacity
+                      className="bg-azure h-10 w-10 rounded-xl justify-center items-center mr-2"
+                      onPress={() => handleComplete(index)}
+                    >
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={24}
+                        color="#7284BE"
+                      />
+                    </TouchableOpacity>
 
-                  <TouchableOpacity
-                    className="m-2 px-3 py-1 rounded-xl justify-center items-center"
-                    onPress={() => handleDelete(index)}
-                  >
-                    <MaterialIcons name="delete" size={30} color="#b2b6bfff" />
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      className="bg-highBg h-10 w-10 rounded-xl justify-center items-center"
+                      onPress={() => handleDelete(index)}
+                    >
+                      <MaterialIcons name="delete" size={22} color="#F63737" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             );
           })}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
 
       <TouchableOpacity
         className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-powderBlue w-16 h-16 rounded-full justify-center items-center shadow-lg"

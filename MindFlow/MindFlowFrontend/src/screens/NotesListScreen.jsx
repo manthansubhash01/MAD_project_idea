@@ -91,37 +91,20 @@ const NotesListScreen = ({ navigation, route }) => {
 
   const renderNote = ({ item }) => (
     <TouchableOpacity
-      className="bg-white flex-1 m-2 p-4 rounded-xl border border-gray-200 h-32 justify-center items-center shadow"
+      className="bg-white flex-1 m-1 p-4 rounded-2xl h-28 justify-between shadow-md"
       onPress={() => navigation.navigate("NoteDetails", { note: item })}
     >
-      <Text
-        className="text-center text-lg font-semibold text-jet"
-        numberOfLines={2}
-      >
+      <View className="bg-azure h-8 w-8 rounded-lg items-center justify-center">
+        <Text className="text-lg">📝</Text>
+      </View>
+      <Text className="text-base font-semibold text-jet" numberOfLines={2}>
         {item.title}
       </Text>
     </TouchableOpacity>
   );
 
   return (
-    <View className="flex-1 p-4">
-      <Text className="text-2xl font-bold text-jet">{folder.name}</Text>
-      {folder.description ? (
-        <Text className="text-base text-gray-600 mt-2">
-          {folder.description}
-        </Text>
-      ) : null}
-
-      <View className="flex-row justify-between items-center mt-4 mb-2">
-        <Text className="text-lg font-bold text-jet">My Notes</Text>
-        <TouchableOpacity
-          className="bg-powderBlue px-4 py-2 rounded-full"
-          onPress={() => setModalVisible(true)}
-        >
-          <Text className="text-white font-semibold">Create Note</Text>
-        </TouchableOpacity>
-      </View>
-
+    <View className="flex-1 bg-azure">
       <FlatList
         data={notes}
         renderItem={renderNote}
@@ -130,9 +113,44 @@ const NotesListScreen = ({ navigation, route }) => {
         }
         numColumns={2}
         columnWrapperClassName="justify-between"
-        contentContainerStyle={{ paddingVertical: 10, paddingBottom: 20 }}
+        contentContainerStyle={{
+          paddingVertical: 10,
+          paddingBottom: 20,
+          paddingHorizontal: 16,
+        }}
         showsVerticalScrollIndicator={false}
         className="flex-1"
+        ListHeaderComponent={
+          <View
+            className="bg-white mb-2 p-5 rounded-2xl shadow-md"
+            style={{ marginHorizontal: 4 }}
+          >
+            <View className="flex-row items-center mb-2">
+              <View className="bg-azure h-12 w-12 rounded-xl items-center justify-center mr-3">
+                <Text className="text-2xl">📁</Text>
+              </View>
+              <View className="flex-1">
+                <Text className="text-xl font-bold text-jet">
+                  {folder.name}
+                </Text>
+                <Text className="text-french-gray text-xs">
+                  {notes.length} note{notes.length !== 1 ? "s" : ""}
+                </Text>
+              </View>
+              <TouchableOpacity
+                className="bg-powderBlue px-4 py-2 rounded-full"
+                onPress={() => setModalVisible(true)}
+              >
+                <Text className="text-white font-semibold text-sm">+ Add</Text>
+              </TouchableOpacity>
+            </View>
+            {folder.description ? (
+              <Text className="text-french-gray text-sm mt-1">
+                {folder.description}
+              </Text>
+            ) : null}
+          </View>
+        }
       />
 
       <CreateNote

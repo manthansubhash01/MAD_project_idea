@@ -16,7 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "../config/api";
 
 const TOKEN = "authToken";
-const AUTOSAVE_DELAY = 3000;
+const AUTOSAVE_DELAY = 1000;
 
 const NoteEditor = ({ note, onSave }) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);

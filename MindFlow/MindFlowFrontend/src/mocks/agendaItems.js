@@ -10,7 +10,6 @@ function getFutureDates(numberOfDays) {
   for (let index = 1; index <= numberOfDays; index++) {
     let d = Date.now();
     if (index > 8) {
-      // set dates on the next month
       const newMonth = new Date(d).getMonth() + 1;
       d = new Date(d).setMonth(newMonth);
     }
