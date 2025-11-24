@@ -5,19 +5,34 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 const TOKEN = "authToken";
 const USER = "User";
 const LAST_LOGIN = "lastLogin";
+const MANUAL_LOGOUT = "manualLogout";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
       try {
+        // Check if user manually logged out
+        const manualLogout = await AsyncStorage.getItem(MANUAL_LOGOUT);
+        if (manualLogout === "true") {
+          // Clear the flag and don't auto-login
+          await AsyncStorage.removeItem(MANUAL_LOGOUT);
+          return;
+        }
+
         const data = await AsyncStorage.getItem(USER);
         if (!data) return;
 
@@ -67,7 +82,13 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      alert("Please enter both email and password");
+      return;
+    }
+
     try {
+      setLoading(true);
       const res = await fetch(
         "https://mad-project-idea.onrender.com/auth/login",
         {
@@ -95,54 +116,111 @@ const LoginScreen = ({ navigation }) => {
     } catch (err) {
       console.log(err);
       alert("Network error. Please check your connection.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <View className="flex-1 bg-white px-6 justify-center">
-      <Text className="text-3xl font-bold text-jet text-center mb-2">
-        Welcome Back
-      </Text>
-      <Text className="text-base text-french-gray text-center mb-8">
-        Log in to continue
-      </Text>
-
-      <TextInput
-        className="h-12 border border-french-gray rounded-xl px-4 mb-4 bg-white text-jet text-base"
-        placeholder="Email"
-        placeholderTextColor="#b2b6baff"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-      />
-
-      <TextInput
-        className="h-12 border border-french-gray rounded-xl px-4 mb-6 bg-white text-jet text-base"
-        placeholder="Password"
-        placeholderTextColor="#b2b6baff"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-
-      <TouchableOpacity
-        className="bg-powderBlue rounded-xl py-3 mb-4 items-center shadow-md"
-        onPress={handleLogin}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 bg-white"
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
-        <Text className="text-white font-semibold text-lg">Log In</Text>
-      </TouchableOpacity>
+        {/* Header Section */}
+        <View className="bg-powderBlue pt-12 pb-8 px-6 rounded-b-3xl mb-6">
+          <View className="items-center">
+            <Text className="text-3xl font-bold text-white mb-1">
+              Welcome Back
+            </Text>
+            <Text className="text-white/80 text-sm">Sign in to continue</Text>
+          </View>
+        </View>
 
-      <Text className="text-center text-french-gray text-sm">
-        Don’t have an account?{" "}
-        <Text
-          className="text-powderBlue font-semibold"
-          onPress={() => navigation.replace("Signup")}
-        >
-          Sign up
-        </Text>
-      </Text>
-    </View>
+        {/* Form Section */}
+        <View className="px-6 flex-1">
+          {/* Email Input */}
+          <View className="mb-4">
+            <Text className="text-jet font-semibold mb-2 ml-1">Email</Text>
+            <View className="flex-row items-center bg-white border border-french-gray rounded-xl px-4 h-14">
+              <Ionicons name="mail-outline" size={20} color="#71A5E9" />
+              <TextInput
+                className="flex-1 ml-3 text-jet text-base"
+                placeholder="Enter your email"
+                placeholderTextColor="#b2b6baff"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
+              />
+            </View>
+          </View>
+
+          {/* Password Input */}
+          <View className="mb-6">
+            <Text className="text-jet font-semibold mb-2 ml-1">Password</Text>
+            <View className="flex-row items-center bg-white border border-french-gray rounded-xl px-4 h-14">
+              <Ionicons name="lock-closed-outline" size={20} color="#71A5E9" />
+              <TextInput
+                className="flex-1 ml-3 text-jet text-base"
+                placeholder="Enter your password"
+                placeholderTextColor="#b2b6baff"
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={setPassword}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Ionicons
+                  name={showPassword ? "eye-off-outline" : "eye-outline"}
+                  size={20}
+                  color="#71A5E9"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Login Button */}
+          <TouchableOpacity
+            className="bg-powderBlue rounded-xl py-4 mb-6 items-center shadow-lg"
+            onPress={handleLogin}
+            disabled={loading}
+            style={{ elevation: 4 }}
+          >
+            {loading ? (
+              <Text className="text-white font-bold text-lg">
+                Logging in...
+              </Text>
+            ) : (
+              <View className="flex-row items-center">
+                <Text className="text-white font-bold text-lg">Log In</Text>
+                <Ionicons
+                  name="arrow-forward"
+                  size={20}
+                  color="white"
+                  style={{ marginLeft: 8 }}
+                />
+              </View>
+            )}
+          </TouchableOpacity>
+
+          {/* Sign Up Link */}
+          <View className="flex-row justify-center items-center mb-8">
+            <Text className="text-french-gray text-base">
+              Don't have an account?{" "}
+            </Text>
+            <TouchableOpacity onPress={() => navigation.replace("Signup")}>
+              <Text className="text-powderBlue font-bold text-base">
+                Sign Up
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

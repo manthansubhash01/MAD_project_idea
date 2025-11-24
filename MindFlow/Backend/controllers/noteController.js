@@ -168,28 +168,34 @@ const editNoteNyId = async (req, res) => {
   }
 };
 
-// const deleteNote = async (req, res) => {
-//     try{
-//         const noteId = req.params.id?.trim()
-//         const userId = req.user.id
+const deleteNote = async (req, res) => {
+  try {
+    const noteId = req.params.id?.trim();
+    const folderId = req.params.folderId;
+    const userId = req.user.id;
 
-//         if (!mongoose.Types.ObjectId.isValid(noteId)) {
-//             return res.status(400).json({ Error: "Invalid noteId" });
-//         }
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      return res.status(400).json({ Error: "Invalid noteId" });
+    }
 
-//         const note = await Note.findOneAndDelete({_id : new mongoose.Types.ObjectId(noteId), userId : new mongoose.Types.ObjectId(userId)})
+    const note = await Note.findOneAndDelete({
+      _id: new mongoose.Types.ObjectId(noteId),
+      folderId: folderId,
+      userId: new mongoose.Types.ObjectId(userId),
+    });
 
-//         if(!note){
-//             return res.status(400).json({Error : 'Folder is not found or not authorized'})
-//         }
+    if (!note) {
+      return res
+        .status(400)
+        .json({ Error: "Note is not found or not authorized" });
+    }
 
-//         return res.json({ message: "Note deleted" })
-
-//     }catch(err){
-//         console.log(err)
-//         return res.status(500).json({Error : err})
-//     }
-// }
+    return res.json({ message: "Note deleted" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ Error: err });
+  }
+};
 
 module.exports = {
   createNote,
@@ -197,4 +203,5 @@ module.exports = {
   getNotesByID,
   updateNote,
   editNoteNyId,
+  deleteNote,
 };

@@ -6,6 +6,7 @@ const {
   getNotesByID,
   updateNote,
   editNoteNyId,
+  deleteNote,
 } = require("../controllers/noteController");
 const authMiddleware = require("../middleware/authmiddleware");
 
@@ -21,6 +22,6 @@ router.put("/:id", updateNote);
 
 router.patch("/:id", editNoteNyId);
 
-// router.delete('/note/:id',deleteNote)
+router.delete("/:id", deleteNote);
 
 module.exports = router;

@@ -19,6 +19,7 @@ import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
 
 const API_URL = "https://mad-project-idea.onrender.com/user";
 const TOKEN = "authToken";
+const MANUAL_LOGOUT = "manualLogout";
 
 export default function ProfileScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -99,7 +100,9 @@ export default function ProfileScreen({ navigation }) {
 
   const handleLogout = async () => {
     try {
-      const res = await AsyncStorage.removeItem(TOKEN);
+      await AsyncStorage.setItem(MANUAL_LOGOUT, "true");
+      await AsyncStorage.removeItem(TOKEN);
+      await AsyncStorage.removeItem("User");
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
