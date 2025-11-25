@@ -28,7 +28,6 @@ const NoteEditor = ({ note, onSave }) => {
   const autoSaveTimerRef = useRef(null);
   const editorContentRef = useRef("");
 
-  // Load note content from server first
   useEffect(() => {
     const loadNoteContent = async () => {
       if (note?._id && note?.folderId) {
@@ -236,18 +235,6 @@ const NoteEditor = ({ note, onSave }) => {
             ]}
           >
             <Toolbar editor={editor} style={styles.toolbar} />
-
-            {/* <TouchableOpacity
-              style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
-              onPress={() => saveNote(false)}
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.saveButtonText}>Save</Text>
-              )}
-            </TouchableOpacity> */}
           </View>
         </>
       )}

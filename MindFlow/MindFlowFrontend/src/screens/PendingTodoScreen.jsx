@@ -23,26 +23,6 @@ const PendingTodoScreen = () => {
   const [priority, setPriority] = useState("medium");
 
   const { todos, setTodos } = useContext(TodoContext);
-  // const [todos, setTodos] = useState([])
-
-  // async function loadTodos(){
-  //     try{
-  //         const token = await AsyncStorage.getItem(TOKEN)
-
-  //         const data = await fetch(API_URL,{
-  //             headers: { "Authorization": `Bearer ${token}` }
-  //         })
-  //         const result = await data.json()
-  //         setTodos(result.filter((ele) => !ele.isCompleted))
-  //         console.log(result)
-  //     }catch(err){
-  //         console.log(err)
-  //     }
-  // }
-
-  // useEffect(() => {
-  //     loadTodos()
-  // },[todos])
 
   const createTask = async (title, description, priority) => {
     try {
@@ -92,7 +72,6 @@ const PendingTodoScreen = () => {
         body: JSON.stringify({ ...todos[index], isCompleted: true }),
       });
       const result = await res.json();
-      // console.log(result)
       setTodos((prev) => prev.filter((task, i) => i !== index));
     } catch (err) {
       console.log(err);
@@ -111,7 +90,6 @@ const PendingTodoScreen = () => {
       });
 
       const result = await res.json();
-      // console.log("Deleted:", result);
 
       setTodos((prev) => prev.filter((_, i) => i !== index));
     } catch (err) {
@@ -126,7 +104,6 @@ const PendingTodoScreen = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
-        {/* Header Section */}
         <View className="bg-powderBlue pt-12 pb-6 px-6 rounded-b-3xl mb-4">
           <Text className="text-3xl font-bold text-white mb-1">My Tasks</Text>
           <Text className="text-white/80 text-sm">
@@ -134,7 +111,6 @@ const PendingTodoScreen = () => {
           </Text>
         </View>
 
-        {/* Priority Stats Cards */}
         <View className="px-4 mb-4">
           <View className="bg-white rounded-2xl p-4 shadow-md mb-3">
             <View className="flex-row items-center justify-between">
@@ -211,8 +187,7 @@ const PendingTodoScreen = () => {
           </View>
         </View>
 
-        {/* Tasks List */}
-        <View className="px-4">
+        <View className="px-4 mb-4">
           {todos.map((ele, index) => {
             return (
               <View

@@ -14,7 +14,6 @@ const API_URL = "https://mad-project-idea.onrender.com/user/tasks";
 const TOKEN = "authToken";
 
 const CompletedTodoScreen = () => {
-  // const {todos, setTodos,total, setTotal} = useContext(TodoContext)
   const [todos, setTodos] = useState([]);
   const [total, setTotal] = useState(0);
 
@@ -28,7 +27,6 @@ const CompletedTodoScreen = () => {
       const result = await data.json();
       setTotal(result.length);
       setTodos(result.filter((ele) => ele.isCompleted));
-      // console.log(result);
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +48,6 @@ const CompletedTodoScreen = () => {
       });
 
       const result = await res.json();
-      // console.log("Deleted:", result);
 
       setTodos((prev) => prev.filter((_, i) => i !== index));
     } catch (err) {
@@ -64,7 +61,6 @@ const CompletedTodoScreen = () => {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 20 }}
     >
-      {/* Header Section */}
       <View className="bg-powderBlue pt-12 pb-6 px-6 rounded-b-3xl mb-6">
         <View className="flex-row justify-between items-center">
           <View className="flex-1">

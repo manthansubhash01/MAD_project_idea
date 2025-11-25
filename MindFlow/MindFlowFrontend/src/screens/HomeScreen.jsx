@@ -114,7 +114,6 @@ const HomeScreen = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 30 }}
     >
-      {/* Greeting Header */}
       <View className="bg-powderBlue pt-12 pb-6 px-6 rounded-b-3xl mb-6">
         <Text className="text-white text-2xl font-bold leading-relaxed">
           {greeting}
@@ -124,7 +123,6 @@ const HomeScreen = ({ navigation }) => {
         </Text>
       </View>
 
-      {/* Quick Stats Cards */}
       <View className="flex-row gap-3 px-4 mb-6">
         <TouchableOpacity
           className="flex-1 bg-white p-5 rounded-2xl shadow-md"
@@ -250,8 +248,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Quick Actions */}
-      <View className="mx-4">
+      <View className="px-4">
         <Text className="text-jet text-lg font-bold mb-3 px-1">
           Quick Actions
         </Text>
