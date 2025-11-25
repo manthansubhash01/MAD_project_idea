@@ -7,14 +7,15 @@ const TOKEN = "authToken";
 
 const DeleteAccountModal = ({ visible, onCancel, onDelete }) => {
   return (
-    <Modal visible={visible} transparent animationType="slide">
+    <Modal visible={visible} transparent={true} animationType="slide">
       <View className="flex-1 bg-black/30 justify-center items-center">
         <View className="w-4/5 bg-white rounded-xl p-5">
           <Text className="text-lg font-bold mb-4 text-black">
             Confirm Delete
           </Text>
           <Text className="text-gray-700 mb-6">
-            Are you sure you want to delete your account? This action cannot be undone.
+            Are you sure you want to delete your account? This action cannot be
+            undone.
           </Text>
 
           <View className="flex-row">

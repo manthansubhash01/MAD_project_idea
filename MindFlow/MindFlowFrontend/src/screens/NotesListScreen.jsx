@@ -199,7 +199,7 @@ const NotesListScreen = ({ navigation, route }) => {
       {/* Menu Modal */}
       {menuVisible === item._id && (
         <Modal
-          transparent
+          transparent={true}
           visible={menuVisible === item._id}
           animationType="fade"
           onRequestClose={closeMenu}

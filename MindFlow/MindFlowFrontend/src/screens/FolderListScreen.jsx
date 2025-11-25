@@ -241,7 +241,7 @@ const FolderListScreen = ({ navigation }) => {
                   {/* Menu Modal */}
                   {menuVisible === ele._id && (
                     <Modal
-                      transparent
+                      transparent={true}
                       visible={menuVisible === ele._id}
                       animationType="fade"
                       onRequestClose={closeMenu}

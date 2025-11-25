@@ -1,9 +1,26 @@
-import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, Modal,TextInput,Button } from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Modal,
+  TextInput,
+  Button,
+} from "react-native";
 
-const CreateFolder = ({visible,folderName,description,setFolderName,setDescription,onCancel,onSubmit}) => {
+const CreateFolder = ({
+  visible,
+  folderName,
+  description,
+  setFolderName,
+  setDescription,
+  onCancel,
+  onSubmit,
+}) => {
   return (
-    <Modal visible={visible} transparent animationType="slide">
+    <Modal visible={visible} transparent={true} animationType="slide">
       <View className="flex-1 bg-black/30 justify-center items-center">
         <View className="w-4/5 bg-white rounded-xl p-5">
           <Text className="text-lg font-bold mb-4 text-jet text-center">
@@ -44,8 +61,7 @@ const CreateFolder = ({visible,folderName,description,setFolderName,setDescripti
         </View>
       </View>
     </Modal>
+  );
+};
 
-  )
-}
-
-export default CreateFolder
+export default CreateFolder;

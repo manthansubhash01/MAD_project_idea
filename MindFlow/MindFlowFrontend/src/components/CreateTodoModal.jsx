@@ -1,10 +1,29 @@
-import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, Modal,TextInput,Button } from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Modal,
+  TextInput,
+  Button,
+} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-const CreateTodo = ({visible,title,description,priority,setTitle,setDescription,setPriority,onCancel,onSubmit}) => {
+const CreateTodo = ({
+  visible,
+  title,
+  description,
+  priority,
+  setTitle,
+  setDescription,
+  setPriority,
+  onCancel,
+  onSubmit,
+}) => {
   return (
-    <Modal visible={visible} transparent animationType="slide">
+    <Modal visible={visible} transparent={true} animationType="slide">
       <View className="flex-1 justify-center items-center bg-black/30">
         <View className="w-11/12 bg-white rounded-2xl p-6 shadow-lg">
           <Text className="text-2xl font-bold text-jet mb-5 text-center">
@@ -28,7 +47,9 @@ const CreateTodo = ({visible,title,description,priority,setTitle,setDescription,
           />
 
           <View className="mb-5">
-            <Text className="text-jet font-semibold mb-2">Select Priority:</Text>
+            <Text className="text-jet font-semibold mb-2">
+              Select Priority:
+            </Text>
             <View className="border border-french-gray rounded-xl overflow-hidden">
               <Picker
                 selectedValue={priority}
@@ -43,7 +64,6 @@ const CreateTodo = ({visible,title,description,priority,setTitle,setDescription,
           </View>
 
           <View className="flex-row justify-between">
-
             <TouchableOpacity
               className="flex-1 bg-powderBlue rounded-full m-2 py-3 items-center"
               onPress={onSubmit}
@@ -57,13 +77,11 @@ const CreateTodo = ({visible,title,description,priority,setTitle,setDescription,
             >
               <Text className="text-white font-semibold text-base">Cancel</Text>
             </TouchableOpacity>
-            
           </View>
         </View>
       </View>
     </Modal>
-  )
-}
+  );
+};
 
-
-export default CreateTodo
+export default CreateTodo;
