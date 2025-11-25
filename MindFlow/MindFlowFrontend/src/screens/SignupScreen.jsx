@@ -19,10 +19,62 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSignup = async () => {
+    setError("");
+
+    // Validate empty fields
     if (!name.trim() || !email.trim() || !password.trim()) {
-      alert("Please fill in all fields");
+      setError("Please fill in all fields");
+      return;
+    }
+
+    // Validate name
+    if (name.trim().length < 2) {
+      setError("Name must be at least 2 characters long");
+      return;
+    }
+
+    // Validate email format
+    if (!validateEmail(email.trim())) {
+      setError("Please enter a valid email address (e.g., user@example.com)");
+      return;
+    }
+
+    // Validate whitespace
+    if (
+      name !== name.trim() ||
+      email !== email.trim() ||
+      password !== password.trim()
+    ) {
+      setError("Fields cannot contain leading or trailing spaces");
+      return;
+    }
+
+    // Validate password strength
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
+
+    if (!/(?=.*[a-z])/.test(password)) {
+      setError("Password must contain at least one lowercase letter");
+      return;
+    }
+
+    if (!/(?=.*[A-Z])/.test(password)) {
+      setError("Password must contain at least one uppercase letter");
+      return;
+    }
+
+    if (!/(?=.*\d)/.test(password)) {
+      setError("Password must contain at least one number");
       return;
     }
 
@@ -33,7 +85,11 @@ const SignupScreen = ({ navigation }) => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim(),
+            password,
+          }),
         }
       );
 
@@ -41,12 +97,16 @@ const SignupScreen = ({ navigation }) => {
       console.log(data);
 
       if (!res.ok) {
-        alert(data.error || "Signup failed. Please try again.");
+        if (res.status === 409 || data.error?.includes("already")) {
+          setError("This email is already registered. Please login instead.");
+        } else {
+          setError(data.error || "Signup failed. Please try again.");
+        }
         return;
       }
 
-      await AsyncStorage.setItem(User_Name, name);
-      alert("Account created successfully! Please log in.");
+      await AsyncStorage.setItem(User_Name, name.trim());
+      alert("✓ Account created successfully! Redirecting to login...");
       navigation.replace("Login");
     } catch (err) {
       console.log(err);
@@ -66,7 +126,6 @@ const SignupScreen = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Header Section */}
         <View className="bg-powderBlue pt-12 pb-8 px-6 rounded-b-3xl mb-6">
           <View className="items-center">
             <Text className="text-3xl font-bold text-white mb-1">
@@ -76,9 +135,21 @@ const SignupScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Form Section */}
         <View className="px-6 flex-1">
-          {/* Name Input */}
+          {error ? (
+            <View className="bg-red-100 border border-red-400 rounded-xl p-4 mb-4">
+              <View className="flex-row items-start">
+                <Ionicons
+                  name="alert-circle"
+                  size={20}
+                  color="#DC2626"
+                  style={{ marginRight: 8, marginTop: 2 }}
+                />
+                <Text className="text-red-700 flex-1">{error}</Text>
+              </View>
+            </View>
+          ) : null}
+
           <View className="mb-4">
             <Text className="text-jet font-semibold mb-2 ml-1">Name</Text>
             <View className="flex-row items-center bg-white border border-french-gray rounded-xl px-4 h-14">
@@ -93,7 +164,6 @@ const SignupScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Email Input */}
           <View className="mb-4">
             <Text className="text-jet font-semibold mb-2 ml-1">Email</Text>
             <View className="flex-row items-center bg-white border border-french-gray rounded-xl px-4 h-14">
@@ -110,7 +180,6 @@ const SignupScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Password Input */}
           <View className="mb-6">
             <Text className="text-jet font-semibold mb-2 ml-1">Password</Text>
             <View className="flex-row items-center bg-white border border-french-gray rounded-xl px-4 h-14">
@@ -133,7 +202,6 @@ const SignupScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Sign Up Button */}
           <TouchableOpacity
             className="bg-powderBlue rounded-xl py-4 mb-6 items-center shadow-lg"
             onPress={handleSignup}
@@ -157,7 +225,6 @@ const SignupScreen = ({ navigation }) => {
             )}
           </TouchableOpacity>
 
-          {/* Login Link */}
           <View className="flex-row justify-center items-center mb-8">
             <Text className="text-french-gray text-base">
               Already have an account?{" "}

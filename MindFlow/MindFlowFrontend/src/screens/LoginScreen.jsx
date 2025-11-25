@@ -21,14 +21,18 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Check if user manually logged out
         const manualLogout = await AsyncStorage.getItem(MANUAL_LOGOUT);
         if (manualLogout === "true") {
-          // Clear the flag and don't auto-login
           await AsyncStorage.removeItem(MANUAL_LOGOUT);
           return;
         }
@@ -82,8 +86,29 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const handleLogin = async () => {
+    setError("");
+
+    // Validate empty fields
     if (!email.trim() || !password.trim()) {
-      alert("Please enter both email and password");
+      setError("Please enter both email and password");
+      return;
+    }
+
+    // Validate email format
+    if (!validateEmail(email.trim())) {
+      setError("Please enter a valid email address (e.g., user@example.com)");
+      return;
+    }
+
+    // Validate whitespace
+    if (email !== email.trim() || password !== password.trim()) {
+      setError("Email and password cannot contain leading or trailing spaces");
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
       return;
     }
 
@@ -94,14 +119,20 @@ const LoginScreen = ({ navigation }) => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email: email.trim(), password }),
         }
       );
       const data = await res.json();
       console.log(data);
 
       if (!res.ok) {
-        alert(data.error || "Login failed. Please check your credentials.");
+        if (res.status === 401 || res.status === 404) {
+          setError(
+            "Invalid email or password. Please check your credentials or sign up if you don't have an account."
+          );
+        } else {
+          setError(data.error || "Login failed. Please try again.");
+        }
         return;
       }
 
@@ -131,7 +162,6 @@ const LoginScreen = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Header Section */}
         <View className="bg-powderBlue pt-12 pb-8 px-6 rounded-b-3xl mb-6">
           <View className="items-center">
             <Text className="text-3xl font-bold text-white mb-1">
@@ -141,9 +171,21 @@ const LoginScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Form Section */}
         <View className="px-6 flex-1">
-          {/* Email Input */}
+          {error ? (
+            <View className="bg-red-100 border border-red-400 rounded-xl p-4 mb-4">
+              <View className="flex-row items-start">
+                <Ionicons
+                  name="alert-circle"
+                  size={20}
+                  color="#DC2626"
+                  style={{ marginRight: 8, marginTop: 2 }}
+                />
+                <Text className="text-red-700 flex-1">{error}</Text>
+              </View>
+            </View>
+          ) : null}
+
           <View className="mb-4">
             <Text className="text-jet font-semibold mb-2 ml-1">Email</Text>
             <View className="flex-row items-center bg-white border border-french-gray rounded-xl px-4 h-14">
@@ -160,7 +202,6 @@ const LoginScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Password Input */}
           <View className="mb-6">
             <Text className="text-jet font-semibold mb-2 ml-1">Password</Text>
             <View className="flex-row items-center bg-white border border-french-gray rounded-xl px-4 h-14">
@@ -183,7 +224,6 @@ const LoginScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Login Button */}
           <TouchableOpacity
             className="bg-powderBlue rounded-xl py-4 mb-6 items-center shadow-lg"
             onPress={handleLogin}
@@ -207,7 +247,6 @@ const LoginScreen = ({ navigation }) => {
             )}
           </TouchableOpacity>
 
-          {/* Sign Up Link */}
           <View className="flex-row justify-center items-center mb-8">
             <Text className="text-french-gray text-base">
               Don't have an account?{" "}
