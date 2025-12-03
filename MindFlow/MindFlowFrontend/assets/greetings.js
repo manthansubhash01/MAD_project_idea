@@ -10,9 +10,9 @@ const greetings = {
   afternoon: [
     "Good Afternoon, {name}. Keep up the momentum!",
     "Hey {name}, hope your day’s going well! Let’s get things done.",
-    "Good Afternoon, {name}! Almost there—keep pushing.",
+    "Good Afternoon, {name}! Almost there keep pushing.",
     "Afternoon, {name}! Let’s check off some tasks.",
-    "Hello {name}, the day is half over—time to shine!",
+    "Hello {name}, the day is half over time to shine!",
     "Good day, {name}! Let’s conquer your afternoon tasks."
   ],
   evening: [
@@ -25,14 +25,14 @@ const greetings = {
   ],
   motivational: [
     "You’re closer to done than you think, {name}.",
-    "One step at a time, {name} — you’ve got this.",
+    "One step at a time, {name} you’ve got this.",
     "Every task completed is a win, {name}!",
     "Keep going, {name}! Success is in the details.",
     "Small progress is still progress, {name}.",
     "Stay focused, {name}! You can do this."
   ],
   playful: [
-    "🚀 Ready to crush your to-do list, {name}?",
+    "🚀 Ready to crush your todo list, {name}?",
     "Tasks don’t stand a chance against you, {name}.",
     "Let’s turn that to-do list into a done list, {name}!",
     "Hi {name}, your tasks called… they’re waiting.",

@@ -29,6 +29,11 @@
     "web": {
       "bundler": "metro",
       "favicon": "./assets/MindFlow.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4c5198cd-53e3-4512-8bb4-b3fb058b69f5"
+      }
     }
   }
 }
