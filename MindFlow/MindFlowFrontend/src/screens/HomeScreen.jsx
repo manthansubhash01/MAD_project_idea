@@ -21,7 +21,6 @@ import CalendarScreen from "./CalenderScreen";
 
 const Drawer = createDrawerNavigator();
 const TOKEN = "authToken";
-const User_greetings = greetings;
 const User_Name = "Name";
 const LAST_LOGIN = "lastLogin";
 const LAST_GREETING = "lastGreeting";
@@ -52,23 +51,17 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const loadData = async () => {
       const storedName = await AsyncStorage.getItem(User_Name);
-      if (storedName) {
-        setName(storedName);
-      } else {
-        setName("Champ");
-      }
+      const userName = storedName || "Champ";
+      setName(userName);
 
       const firstLoginToday = await checkFirstLogin();
 
       let finalGreeting = "";
 
       if (firstLoginToday) {
-        finalGreeting = await getRandomGreeting(name, true);
+        finalGreeting = await getRandomGreeting(userName, true);
       } else {
-        const lastGreeting = await AsyncStorage.getItem(LAST_GREETING);
-        finalGreeting = lastGreeting
-          ? lastGreeting.replace("{name}", name)
-          : await getRandomGreeting(name, false);
+        finalGreeting = await getRandomGreeting(userName, false);
       }
 
       setGreeting(finalGreeting);
@@ -89,21 +82,25 @@ const HomeScreen = ({ navigation }) => {
     const time = getTimeOfDay();
 
     if (isFirstLogin) {
-      return User_greetings[time][0].replace("{name}", name);
+      const timeBasedPool = greetings[time];
+      const randomGreeting =
+        timeBasedPool[Math.floor(Math.random() * timeBasedPool.length)];
+      await AsyncStorage.setItem(LAST_GREETING, randomGreeting);
+      return randomGreeting.replace("{name}", name);
     }
 
     const categories = ["motivational", "playful", "neutral"];
     const category = categories[Math.floor(Math.random() * categories.length)];
 
     const pool = greetings[category];
-    const lastGreeting = await AsyncStorage.getItem("lastGreeting");
+    const lastGreeting = await AsyncStorage.getItem(LAST_GREETING);
 
     let newGreeting;
     do {
       newGreeting = pool[Math.floor(Math.random() * pool.length)];
     } while (newGreeting === lastGreeting && pool.length > 1);
 
-    await AsyncStorage.setItem("lastGreeting", newGreeting);
+    await AsyncStorage.setItem(LAST_GREETING, newGreeting);
 
     return newGreeting.replace("{name}", name);
   }
@@ -151,7 +148,6 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Today's Tasks Card */}
       <View className="mx-4 mb-6">
         <View className="bg-white rounded-2xl p-5 shadow-md">
           <View className="flex-row items-center justify-between mb-4">
@@ -206,7 +202,6 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Progress Card */}
       <View className="mx-4 mb-6">
         <View className="bg-white rounded-2xl p-5 shadow-md">
           <View className="flex-row items-center mb-4">
