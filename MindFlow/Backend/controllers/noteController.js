@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const createNote = async (req, res) => {
   try {
     let { title } = req.body;
-    const folderId = req.params.folderId; // Get from route params
+    const folderId = req.params.folderId;
     const userId = req.user.id;
 
     if (!title) title = "Untitled";

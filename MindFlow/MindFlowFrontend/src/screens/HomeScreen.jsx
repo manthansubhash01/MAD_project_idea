@@ -13,6 +13,7 @@ import Notes from "./FolderListScreen";
 import ProfileScreen from "./ProfileScreen";
 import { greetings } from "../../assets/greetings";
 import TodoScreen from "./TodoScreen";
+import CompletedTodoScreen from "./CompletedTodoScreen";
 import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { TodoProvider } from "../contexts/TodoContext";
 import { TodoContext } from "../contexts/TodoContext";
@@ -136,7 +137,7 @@ const HomeScreen = ({ navigation }) => {
 
         <TouchableOpacity
           className="flex-1 bg-white p-5 rounded-2xl shadow-md"
-          onPress={() => navigation.navigate("Tasks")}
+          onPress={() => navigation.navigate("CompletedTasks")}
         >
           <View className="bg-azure h-14 w-14 rounded-xl items-center justify-center mb-3">
             <MaterialIcons name="check-circle" size={28} color="#7284BE" />
@@ -318,6 +319,15 @@ const Main = () => {
           options={{
             drawerIcon: ({ color, size }) => (
               <FontAwesome name="tasks" size={size} color={color} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="CompletedTasks"
+          component={CompletedTodoScreen}
+          options={{
+            drawerIcon: ({ color, size }) => (
+              <MaterialIcons name="check-circle" size={size} color={color} />
             ),
           }}
         />

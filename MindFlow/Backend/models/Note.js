@@ -14,7 +14,7 @@ const blockSchema = new mongoose.Schema({
 
 const noteSchema = mongoose.Schema({
   title: { type: String },
-  content: { type: String, default: "" }, // Rich text HTML content
+  content: { type: String, default: "" },
   blocks: [blockSchema],
   folderId: { type: mongoose.Schema.ObjectId, ref: "Folder", required: true },
   userId: { type: mongoose.Schema.ObjectId, ref: "User", required: true },

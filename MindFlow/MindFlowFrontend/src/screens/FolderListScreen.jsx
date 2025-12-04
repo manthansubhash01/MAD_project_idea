@@ -24,6 +24,7 @@ const FolderListScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [renameModalVisible, setRenameModalVisible] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [folderToRename, setFolderToRename] = useState(null);
   const [menuVisible, setMenuVisible] = useState(null);
   const [folderName, setFolderName] = useState("");
   const [description, setDescription] = useState("");
@@ -33,7 +34,6 @@ const FolderListScreen = ({ navigation }) => {
     const loadNotes = async () => {
       try {
         const token = await AsyncStorage.getItem(TOKEN);
-        // console.log(token)
         const data = await fetch(
           "https://mad-project-idea.onrender.com/user/folders",
           {
@@ -42,7 +42,6 @@ const FolderListScreen = ({ navigation }) => {
         );
         const result = await data.json();
         setNotes(result);
-        // console.log(result)
       } catch (err) {
         console.log(err);
       }
@@ -73,7 +72,6 @@ const FolderListScreen = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    // console.log(folderName)
     if (folderName != "") {
       createFolder(folderName, description);
       setModalVisible(false);
@@ -84,9 +82,17 @@ const FolderListScreen = ({ navigation }) => {
 
   const handleRenameFolder = async (updatedData) => {
     try {
+      console.log("Folder to rename:", folderToRename);
+      console.log("Updated data:", updatedData);
+
+      if (!folderToRename || !folderToRename._id) {
+        Alert.alert("Error", "No folder selected for renaming");
+        return;
+      }
+
       const token = await AsyncStorage.getItem(TOKEN);
       const response = await fetch(
-        `https://mad-project-idea.onrender.com/user/folders/${selectedFolder._id}`,
+        `https://mad-project-idea.onrender.com/user/folders/${folderToRename._id}`,
         {
           method: "PUT",
           headers: {
@@ -101,19 +107,21 @@ const FolderListScreen = ({ navigation }) => {
         const updatedFolder = await response.json();
         setNotes((prev) =>
           prev.map((folder) =>
-            folder._id === selectedFolder._id ? updatedFolder : folder
+            folder._id === folderToRename._id ? updatedFolder : folder
           )
         );
         Alert.alert("Success", "Folder renamed successfully");
       } else {
-        Alert.alert("Error", "Failed to rename folder");
+        const errorData = await response.json();
+        console.log("Rename folder error:", errorData);
+        Alert.alert("Error", errorData.message || "Failed to rename folder");
       }
     } catch (err) {
       console.log(err);
       Alert.alert("Error", "An error occurred");
     }
     setRenameModalVisible(false);
-    setSelectedFolder(null);
+    setFolderToRename(null);
   };
 
   const handleDeleteFolder = (folder) => {
@@ -174,7 +182,6 @@ const FolderListScreen = ({ navigation }) => {
             contentContainerStyle={{ paddingBottom: 20 }}
             showsVerticalScrollIndicator={false}
           >
-            {/* Header Section */}
             <View className="bg-powderBlue pt-12 pb-6 px-6 rounded-b-3xl mb-6">
               <View className="flex-row justify-between items-center">
                 <View className="flex-1">
@@ -196,7 +203,6 @@ const FolderListScreen = ({ navigation }) => {
               </View>
             </View>
 
-            {/* Folders Grid */}
             <View className="px-4">
               {notes.map((ele, idx) => (
                 <View key={idx} className="mb-3">
@@ -238,7 +244,6 @@ const FolderListScreen = ({ navigation }) => {
                     </TouchableOpacity>
                   </TouchableOpacity>
 
-                  {/* Menu Modal */}
                   {menuVisible === ele._id && (
                     <Modal
                       transparent={true}
@@ -255,7 +260,8 @@ const FolderListScreen = ({ navigation }) => {
                           <TouchableOpacity
                             style={styles.menuItem}
                             onPress={() => {
-                              closeMenu();
+                              setFolderToRename(selectedFolder);
+                              setMenuVisible(null);
                               setRenameModalVisible(true);
                             }}
                           >
@@ -303,10 +309,10 @@ const FolderListScreen = ({ navigation }) => {
 
           <RenameFolderModal
             visible={renameModalVisible}
-            folder={selectedFolder}
+            folder={folderToRename}
             onClose={() => {
               setRenameModalVisible(false);
-              setSelectedFolder(null);
+              setFolderToRename(null);
             }}
             onSave={handleRenameFolder}
           />

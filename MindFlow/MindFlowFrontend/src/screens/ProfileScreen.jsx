@@ -40,7 +40,6 @@ export default function ProfileScreen({ navigation }) {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      // console.log(data);
       setUser(data);
     } catch (err) {
       console.error("Error fetching profile:", err);
@@ -83,7 +82,6 @@ export default function ProfileScreen({ navigation }) {
       const data = await res.json();
       if (res.ok) {
         Alert.alert("Deleted", data.message);
-        // setIsLoggedIn(false);
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -115,12 +113,13 @@ export default function ProfileScreen({ navigation }) {
   };
 
   const handleSubmit = () => {
-    // console.log(folderName);
-    if (folderName != "") {
+    if (oldPassword.trim() !== "" && newPassword.trim() !== "") {
       handleChangePassword();
       setModalVisible(false);
       setOldPassword("");
       setNewPassword("");
+    } else {
+      Alert.alert("Error", "Please fill both password fields");
     }
   };
 
@@ -129,7 +128,6 @@ export default function ProfileScreen({ navigation }) {
       className="flex-1 bg-azure"
       showsVerticalScrollIndicator={false}
     >
-      {/* Header Section with Profile */}
       <View className="bg-powderBlue pt-12 pb-8 px-6 rounded-b-3xl">
         <Text className="text-3xl font-bold text-white mb-6">Profile</Text>
 
@@ -150,8 +148,7 @@ export default function ProfileScreen({ navigation }) {
         </View>
       </View>
 
-      {/* User Info Cards */}
-      <View className="px-6 mt-6">
+      <View className="px-6 mb-6">
         <View className="bg-white rounded-2xl p-5 shadow-lg mb-4">
           <Text className="text-jet text-lg font-bold mb-4">
             Personal Information
@@ -182,7 +179,6 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Account Actions */}
         <Text className="text-jet text-lg font-bold mb-3 px-1">
           Account Settings
         </Text>

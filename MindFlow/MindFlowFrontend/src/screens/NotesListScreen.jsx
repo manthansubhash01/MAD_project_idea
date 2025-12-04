@@ -196,7 +196,6 @@ const NotesListScreen = ({ navigation, route }) => {
         </Text>
       </TouchableOpacity>
 
-      {/* Menu Modal */}
       {menuVisible === item._id && (
         <Modal
           transparent={true}

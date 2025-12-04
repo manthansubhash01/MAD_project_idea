@@ -88,25 +88,21 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     setError("");
 
-    // Validate empty fields
     if (!email.trim() || !password.trim()) {
       setError("Please enter both email and password");
       return;
     }
 
-    // Validate email format
     if (!validateEmail(email.trim())) {
       setError("Please enter a valid email address (e.g., user@example.com)");
       return;
     }
 
-    // Validate whitespace
     if (email !== email.trim() || password !== password.trim()) {
       setError("Email and password cannot contain leading or trailing spaces");
       return;
     }
 
-    // Validate password length
     if (password.length < 6) {
       setError("Password must be at least 6 characters long");
       return;

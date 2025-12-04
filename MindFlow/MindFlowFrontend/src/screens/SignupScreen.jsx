@@ -29,25 +29,21 @@ const SignupScreen = ({ navigation }) => {
   const handleSignup = async () => {
     setError("");
 
-    // Validate empty fields
     if (!name.trim() || !email.trim() || !password.trim()) {
       setError("Please fill in all fields");
       return;
     }
 
-    // Validate name
     if (name.trim().length < 2) {
       setError("Name must be at least 2 characters long");
       return;
     }
 
-    // Validate email format
     if (!validateEmail(email.trim())) {
       setError("Please enter a valid email address (e.g., user@example.com)");
       return;
     }
 
-    // Validate whitespace
     if (
       name !== name.trim() ||
       email !== email.trim() ||
@@ -57,7 +53,6 @@ const SignupScreen = ({ navigation }) => {
       return;
     }
 
-    // Validate password strength
     if (password.length < 6) {
       setError("Password must be at least 6 characters long");
       return;
